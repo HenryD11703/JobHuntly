@@ -12,5 +12,21 @@ services:
     volumes:
       - mssql_data:/var/opt/mssql
 
+  jobhuntly-api:
+    build:
+      context: ./JobHuntlyBackend
+      dockerfile: Dockerfile
+    container_name: jobhuntly-api
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=JobHuntlyDb;User Id=sa;Password=YourStrong@Password123;TrustServerCertificate=True;
+      - JwtSettings__Secret=ThisIsMySuperSecretKeyForJobHuntlyProject2026!
+      - JwtSettings__Issuer=JobHuntly
+      - JwtSettings__Audience=JobHuntlyApp
+    depends_on:
+      - sqlserver
+
 volumes:
   mssql_data:
