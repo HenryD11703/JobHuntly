@@ -41,12 +41,5 @@ JobHuntly is a full-stack job application tracking system designed with a modern
 - .NET 8 SDK
 - Docker
 
-### Installation
-1. Start the database using Docker Compose:
-   \docker-compose up -d sqlserver2. Navigate to the backend directory, apply migrations, and run the API:
-   \cd JobHuntlyBackend/JobHuntly.Api   \dotnet run3. In a new terminal, navigate to the frontend directory and install dependencies:
-   \cd jobhuntly-frontend   pm install4. Configure the environment variables by creating a \.env.local\ file in the frontend directory:
-   \NEXT_PUBLIC_API_URL=http://localhost:50305. Start the frontend development server:
-   pm run dev
 ## Deployment
 The backend includes a Dockerfile for deployment to container platforms or virtual private servers. The frontend is optimized for deployment on Vercel.
