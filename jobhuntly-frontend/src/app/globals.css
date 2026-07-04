@@ -1,0 +1,263 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+  --color-bg: #F5F5F5;
+  --color-surface: #FFFFFF;
+  --color-text: #111111;
+  --color-text-muted: #666666;
+  --color-accent: #FF5000; /* Swiss Orange */
+  --color-accent-hover: #E04600;
+  --color-border: #E5E5E5;
+  --color-border-dark: #111111;
+  
+  --font-main: 'Inter', sans-serif;
+  
+  --grid-gap: 20px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: var(--font-main);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: #fff;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-text);
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid var(--color-border-dark);
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  background-color: var(--color-border-dark);
+  color: #fff;
+}
+
+/* Form Styles */
+input, select, textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: var(--font-main);
+  font-size: 16px;
+  border: 2px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-accent);
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  color: var(--color-text-muted);
+}
+
+/* RESPONSIVE LAYOUT CLASSES */
+
+.analytics-container {
+  padding: 40px 40px 0 40px;
+  display: flex;
+  gap: 24px;
+}
+
+.modal-content {
+  background-color: var(--color-surface);
+  padding: 40px;
+  border: 2px solid var(--color-border-dark);
+  width: 800px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  gap: 40px;
+}
+
+.modal-content-small {
+  background-color: var(--color-surface);
+  padding: 40px;
+  border: 2px solid var(--color-border-dark);
+  width: 400px;
+  max-width: 95vw;
+}
+
+.modal-column-right {
+  flex: 1;
+  border-left: 2px solid var(--color-border);
+  padding-left: 40px;
+}
+
+/* Segmented Control (Tabs) */
+.segmented-control {
+  display: flex;
+  border: 2px solid var(--color-border-dark);
+  background-color: var(--color-surface);
+}
+
+.segmented-btn {
+  padding: 12px 24px;
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: var(--color-text);
+  transition: background-color 0.2s ease;
+}
+
+.segmented-btn.active {
+  background-color: var(--color-accent);
+  color: #fff;
+}
+
+/* Calendar Tweaks */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border: 2px solid var(--color-border-dark);
+  background-color: var(--color-border-dark);
+  gap: 2px;
+}
+
+.calendar-cell {
+  background-color: #fff;
+  padding: 12px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.2s;
+}
+
+.calendar-cell:hover {
+  background-color: #FAFAFA;
+}
+
+.calendar-event {
+  font-size: 11px;
+  padding: 4px 6px;
+  font-weight: 600;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  border-radius: 4px; /* subtle softening for events */
+  margin-bottom: 4px;
+}
+
+/* Mobile Media Queries */
+@media (max-width: 768px) {
+  .analytics-container {
+    flex-direction: column;
+    padding: 20px 20px 0 20px;
+  }
+  
+  header {
+    padding: 20px !important;
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 16px;
+  }
+  
+  nav {
+    padding: 16px 20px !important;
+  }
+  
+  main {
+    padding: 20px !important;
+  }
+  
+  .modal-content {
+    flex-direction: column;
+    padding: 24px;
+    gap: 24px;
+  }
+  
+  .modal-column-right {
+    border-left: none;
+    padding-left: 0;
+    border-top: 2px solid var(--color-border);
+    padding-top: 24px;
+  }
+  
+  .calendar-grid {
+    /* To make calendar usable on mobile, we can allow horizontal scrolling */
+    min-width: 600px; 
+  }
+  
+  .calendar-container {
+    overflow-x: auto;
+  }
+  
+  .auth-container {
+    flex-direction: column !important;
+  }
+  
+  .auth-left {
+    padding: 40px !important;
+    text-align: center;
+    flex: none !important;
+  }
+  
+  .auth-right {
+    padding: 40px !important;
+    flex: 1 !important;
+  }
+}

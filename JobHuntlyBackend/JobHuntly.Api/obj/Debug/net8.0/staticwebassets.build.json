@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "7t7gijUj6/eJZ6K6UOX/Gzem7GokzQJVdlVkWgiHRNg=",
+  "Source": "JobHuntly.Api",
+  "BasePath": "_content/JobHuntly.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

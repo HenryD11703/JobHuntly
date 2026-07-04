@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "JobHuntly.Domain/1.0.0": {
+        "runtime": {
+          "JobHuntly.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "JobHuntly.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

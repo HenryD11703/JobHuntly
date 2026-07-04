@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobHuntly.Domain", "JobHuntly.Domain\JobHuntly.Domain.csproj", "{DD9DEF18-8FC3-4CAD-823C-0CEDECE92C60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobHuntly.Application", "JobHuntly.Application\JobHuntly.Application.csproj", "{7AF80BE4-F505-4715-9290-DEC9BAB3668A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobHuntly.Infrastructure", "JobHuntly.Infrastructure\JobHuntly.Infrastructure.csproj", "{01F308E9-D6F3-4779-A944-AEFA3D565122}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobHuntly.Api", "JobHuntly.Api\JobHuntly.Api.csproj", "{97FE9E62-DBEB-49E5-A9A1-2D29950C08E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD9DEF18-8FC3-4CAD-823C-0CEDECE92C60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD9DEF18-8FC3-4CAD-823C-0CEDECE92C60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD9DEF18-8FC3-4CAD-823C-0CEDECE92C60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD9DEF18-8FC3-4CAD-823C-0CEDECE92C60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AF80BE4-F505-4715-9290-DEC9BAB3668A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AF80BE4-F505-4715-9290-DEC9BAB3668A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AF80BE4-F505-4715-9290-DEC9BAB3668A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AF80BE4-F505-4715-9290-DEC9BAB3668A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01F308E9-D6F3-4779-A944-AEFA3D565122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01F308E9-D6F3-4779-A944-AEFA3D565122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01F308E9-D6F3-4779-A944-AEFA3D565122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01F308E9-D6F3-4779-A944-AEFA3D565122}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97FE9E62-DBEB-49E5-A9A1-2D29950C08E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97FE9E62-DBEB-49E5-A9A1-2D29950C08E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97FE9E62-DBEB-49E5-A9A1-2D29950C08E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97FE9E62-DBEB-49E5-A9A1-2D29950C08E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
