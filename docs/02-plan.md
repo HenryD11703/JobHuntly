@@ -1,4 +1,4 @@
-# Technical plan
+﻿# Technical plan
 
 Status: **DRAFT, awaiting owner approval (gate a).** Covers the spec in `01-spec.md`. Each decision lists the alternatives that were rejected and why.
 
@@ -60,7 +60,7 @@ Estimated cost: Fly.io shared-cpu-1x about USD 2.19/month if it ran 24/7 (publis
 
 ### D9. Frontend
 - Stay on Next.js 16 / React 19, upgrade to a patched version (current one has a critical advisory). TypeScript strict, no `any`.
-- Keep vanilla CSS with design tokens (CSS variables) and CSS modules per component; the brutalist/Swiss identity is kept. Split the 446-line board page into components; typed API client in `src/lib/api.ts`.
+- Vanilla CSS with design tokens (CSS variables). **Deviation from the first draft:** one global stylesheet with semantic class names instead of CSS modules per component. The approved mockups were written that way, the design is a small closed system, and modules would have meant dozens of files for no benefit. The 446-line board page was split into components; typed API client in `src/lib/api.ts`; data loading in `src/lib/use-resource.ts`; session and AI allowance in `src/lib/app-context.tsx`.
 - Design direction: "Wayfinding" (see `docs/mockups/wayfinding.css`): Barlow Condensed / Barlow / IBM Plex Mono, black bars, concrete background, signal yellow `#FFD400` always with black text, green only for offers and red only for rejections, and every state also has a word (never colour alone). The first direction tried ("Ledger": warm paper plus orange) was dropped because it looked too much like current generic editorial templates.
 - Rejected: Tailwind or a component library (would pull toward the generic look the owner dislikes); a state library (server data plus local state is enough).
 - **Design gate (b):** mockups of landing, board, application detail (timeline, prep, debrief), Today, analytics, offers are shown to the owner before UI implementation (task T14).

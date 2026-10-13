@@ -1,4 +1,4 @@
-name: CI
+﻿name: CI
 
 on:
   push:
@@ -7,6 +7,9 @@ on:
 
 permissions:
   contents: read
+
+# Every job that needs a database uses a throwaway PostgreSQL service container.
+# The connection string and JWT value in the jobs below are not secrets: they only exist for the job.
 
 jobs:
   backend:
@@ -29,7 +32,6 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
-      # Throwaway service container: these values are not secrets.
       ConnectionStrings__DefaultConnection: Host=localhost;Port=5432;Database=jobhuntly_test;Username=postgres;Password=postgres
     steps:
       - uses: actions/checkout@v4
@@ -46,3 +48,72 @@ jobs:
         run: |
           dotnet list package --vulnerable --include-transitive 2>&1 | tee vulnerable.txt
           if grep -q "has the following vulnerable packages" vulnerable.txt; then exit 1; fi
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: jobhuntly-frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: jobhuntly-frontend/package-lock.json
+      - run: npm ci
+      - name: Lint, types and unit tests
+        run: npm run check
+      - name: Production build
+        run: npm run build
+        env:
+          BACKEND_URL: http://localhost:5070
+      - name: Fail on vulnerable production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: jobhuntly_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      CI: "true"
+      ConnectionStrings__DefaultConnection: Host=localhost;Port=5432;Database=jobhuntly_test;Username=postgres;Password=postgres
+      JwtSettings__Secret: ci-only-jwt-secret-not-used-anywhere-else-0123456789
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: jobhuntly-frontend/package-lock.json
+      - name: Install frontend dependencies and browser
+        working-directory: jobhuntly-frontend
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: End-to-end (desktop and mobile, with axe)
+        working-directory: jobhuntly-frontend
+        run: npm run test:e2e
+      - name: Upload the Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: jobhuntly-frontend/test-results
+          retention-days: 7
