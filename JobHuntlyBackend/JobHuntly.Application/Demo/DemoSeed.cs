@@ -1,4 +1,4 @@
-using JobHuntly.Domain.Entities;
+﻿using JobHuntly.Domain.Entities;
 
 namespace JobHuntly.Application.Demo;
 
@@ -56,7 +56,7 @@ public static class DemoSeed
         northwind.JobPostText = "Northwind Labs is hiring a Backend Engineer to own our ingestion services. Remote within Latin America. " +
                                 "Stack: C#, PostgreSQL, Kafka, AWS. 3+ years of experience and good English. USD 3,000 to 3,600 per month.";
         northwind.Events.Add(Event(northwind, EventType.FollowedUp, now.AddDays(-13), note: "Emailed the hiring manager"));
-        var hr = AddInterview(northwind, now.AddDays(-8), InterviewRound.HrScreen, InterviewStatus.Done);
+        var hr = AddInterview(northwind, At(now, -8), InterviewRound.HrScreen, InterviewStatus.Done);
         hr.Debrief = NewDebrief(hr, now.AddDays(-8), 4,
             "Talked salary range early, they were fine with 3.2k. Asked about timezone overlap, need 4h with CET. Stumbled on the question about my last team size. Next is a technical with the lead.",
             new[] { "Salary expectations", "Timezone overlap (needs 4 h with CET)", "Size of my last team" },
@@ -64,17 +64,17 @@ public static class DemoSeed
             new[] { "Prepare a clear answer about team size and my role in it" });
         northwind.Events.Add(Event(northwind, EventType.InterviewAdded, now.AddDays(-9), note: "HrScreen"));
         northwind.Events.Add(Event(northwind, EventType.DebriefSaved, now.AddDays(-8), note: "HrScreen"));
-        var technical = AddInterview(northwind, now.AddHours(36), InterviewRound.Technical, InterviewStatus.Scheduled);
+        var technical = AddInterview(northwind, NextTechnicalTime(now), InterviewRound.Technical, InterviewStatus.Scheduled);
         technical.ChecklistDone = new List<string> { "reread-post", "product", "setup" };
         technical.PrepQuestionsJson = PrepJson(now.AddDays(-1), rateLimiter.Id, rateLimiter.Title);
         northwind.Events.Add(Event(northwind, EventType.InterviewAdded, now.AddDays(-7), note: "Technical"));
 
         var cobalt = App(user, "Cobalt Street");
-        AddInterview(cobalt, now.AddDays(-1), InterviewRound.HrScreen, InterviewStatus.Scheduled); // no debrief yet: Today asks for it
+        AddInterview(cobalt, At(now, -1), InterviewRound.HrScreen, InterviewStatus.Scheduled); // no debrief yet: Today asks for it
         cobalt.Events.Add(Event(cobalt, EventType.InterviewAdded, now.AddDays(-5), note: "HrScreen"));
 
         var brightwave = App(user, "Brightwave");
-        var behavioral = AddInterview(brightwave, now.AddDays(-25), InterviewRound.Behavioral, InterviewStatus.Done);
+        var behavioral = AddInterview(brightwave, At(now, -25), InterviewRound.Behavioral, InterviewStatus.Done);
         behavioral.Debrief = NewDebrief(behavioral, now.AddDays(-25), 5, "Great conversation about ownership and mentoring. Used the outage story.",
             new[] { "A time I disagreed with a teammate", "How I mentor juniors" }, new[] { "Outage story landed well" }, Array.Empty<string>(), Array.Empty<string>());
         brightwave.Events.Add(Event(brightwave, EventType.InterviewAdded, now.AddDays(-26), note: "Behavioral"));
@@ -91,13 +91,13 @@ public static class DemoSeed
         lumen.Events.Add(Event(lumen, EventType.OfferAdded, now.AddDays(-6), note: "24000 GTQ Monthly"));
 
         var ardent = App(user, "Ardent IO");
-        var screen = AddInterview(ardent, now.AddDays(-9), InterviewRound.HrScreen, InterviewStatus.Done);
+        var screen = AddInterview(ardent, At(now, -9), InterviewRound.HrScreen, InterviewStatus.Done);
         screen.Debrief = NewDebrief(screen, now.AddDays(-9), 3, "Friendly call, they described a take-home due Friday.",
             new[] { "Why I want to leave my current job" }, new[] { "Clear explanation of the process" }, Array.Empty<string>(), new[] { "Finish the take-home before Friday" });
         ardent.Events.Add(Event(ardent, EventType.InterviewAdded, now.AddDays(-10), note: "HrScreen"));
 
         var kettle = App(user, "Kettle & Co");
-        var kettleTech = AddInterview(kettle, now.AddDays(-18), InterviewRound.Technical, InterviewStatus.Done);
+        var kettleTech = AddInterview(kettle, At(now, -18), InterviewRound.Technical, InterviewStatus.Done);
         kettleTech.Debrief = NewDebrief(kettleTech, now.AddDays(-18), 2, "Struggled with the system design question and ran out of time.",
             new[] { "Design a URL shortener" }, Array.Empty<string>(), new[] { "Ran out of time on design", "Weak on database indexing" }, new[] { "Practise system design with a timer" });
         kettle.Events.Add(Event(kettle, EventType.InterviewAdded, now.AddDays(-19), note: "Technical"));
@@ -135,6 +135,19 @@ public static class DemoSeed
         new("Gridline", "Engineer", null, "Remote", true,
             new[] { new Step(ApplicationStatus.Applied, 25), new Step(ApplicationStatus.Rejected, 18) })
     };
+
+    /// <summary>
+    /// A believable interview time: 15:00 UTC on the given day offset (09:00 in Guatemala, mid-afternoon in
+    /// Europe), instead of "now minus some hours", which landed at random times such as 00:38.
+    /// </summary>
+    private static DateTime At(DateTime now, int days) => now.Date.AddDays(days).AddHours(15);
+
+    /// <summary>The next 15:00 UTC that is 20 to 44 hours away: always inside the 48-hour "prepare" window.</summary>
+    private static DateTime NextTechnicalTime(DateTime now)
+    {
+        var candidate = At(now, 1);
+        return candidate - now < TimeSpan.FromHours(20) ? candidate.AddDays(1) : candidate;
+    }
 
     // ---- builders ----
 

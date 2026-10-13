@@ -1,0 +1,38 @@
+# Fly.io configuration for the JobHuntly API.
+# Create the app once with:  fly launch --no-deploy --copy-config --name <your-unique-name>
+# Then set the secrets (see docs/DEPLOYMENT.md) and run:  fly deploy
+#
+# app: Fly app names are global, so pick your own and change it here.
+app = "jobhuntly-api"
+primary_region = "iad"   # Ashburn: close to Neon's us-east-2 (Ohio) and to Vercel's default region
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  ASPNETCORE_ENVIRONMENT = "Production"
+  JwtSettings__Issuer = "JobHuntly"
+  JwtSettings__Audience = "JobHuntlyApp"
+  JwtSettings__ExpiryMinutes = "120"
+  Groq__Model = "openai/gpt-oss-120b"
+  # Secrets (never in this file): ConnectionStrings__DefaultConnection, JwtSettings__Secret, Groq__ApiKey
+  # Optional: Cors__AllowedOrigins (not needed while the browser only talks to the frontend origin)
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Stop when idle and wake on the first request: pennies instead of a 24/7 machine.
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    grace_period = "25s"
+    interval = "30s"
+    method = "GET"
+    path = "/health"
+    timeout = "5s"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

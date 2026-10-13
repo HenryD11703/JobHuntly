@@ -1,4 +1,4 @@
-using JobHuntly.Application.Demo;
+﻿using JobHuntly.Application.Demo;
 using JobHuntly.Application.Logic;
 using JobHuntly.Domain.Entities;
 
@@ -118,5 +118,23 @@ public class DemoSeedTests
             user.JobApplications.OrderBy(a => a.CompanyName).Select(a => (a.CompanyName, (now - a.AppliedDate).TotalDays)).ToList();
 
         Assert.Equal(Offsets(Seed(nowEarlier), nowEarlier), Offsets(Seed(Now), Now));
+    }
+
+    [Theory]
+    [InlineData(0)]    // just after midnight UTC
+    [InlineData(7)]
+    [InlineData(12)]
+    [InlineData(19)]   // evening
+    [InlineData(23)]
+    public void Interviews_sit_at_a_sensible_hour_and_the_upcoming_one_is_inside_the_prepare_window(int hourNow)
+    {
+        var now = new DateTime(2026, 10, 13, hourNow, 17, 0, DateTimeKind.Utc);
+
+        var interviews = Seed(now).JobApplications.SelectMany(a => a.Interviews).ToList();
+
+        Assert.All(interviews, i => Assert.Equal(15, i.InterviewDate.Hour));   // 15:00 UTC = 09:00 in Guatemala
+        var upcoming = Assert.Single(interviews, i => i.InterviewDate > now);
+        Assert.InRange((upcoming.InterviewDate - now).TotalHours, 20, 44);
+        Assert.Contains(NudgeCalculator.Calculate(Seed(now).JobApplications, now.AddMinutes(1)), n => n.Type == NudgeType.Prepare);
     }
 }

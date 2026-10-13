@@ -27,6 +27,8 @@ public class GroqAiClient(HttpClient http, IConfiguration configuration, ILogger
         if (string.IsNullOrWhiteSpace(apiKey))
             throw new ExternalServiceException("AI features are not available on this server. You can fill this in manually.", "ai_not_configured");
 
+        // Groq:Endpoint exists so end-to-end tests can point at a local mock instead of the real service.
+        var endpoint = configuration["Groq:Endpoint"] is { Length: > 0 } custom ? custom : Endpoint;
         var model = configuration["Groq:Model"] is { Length: > 0 } configured ? configured : DefaultModel;
         var timeoutSeconds = configuration.GetValue("Groq:TimeoutSeconds", 10);
 
@@ -45,7 +47,7 @@ public class GroqAiClient(HttpClient http, IConfiguration configuration, ILogger
         // gpt-oss models "think" before answering; a low effort keeps latency and token use small.
         if (model.Contains("gpt-oss", StringComparison.OrdinalIgnoreCase)) payload["reasoning_effort"] = "low";
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, Endpoint)
+        using var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
         {
             Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json")
         };

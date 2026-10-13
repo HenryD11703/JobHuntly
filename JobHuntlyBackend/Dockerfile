@@ -1,24 +1,27 @@
+# Backend image for Fly.io (or any container host). Build context: this folder (JobHuntlyBackend).
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy csproj and restore as distinct layers
-COPY ["JobHuntly.Api/JobHuntly.Api.csproj", "JobHuntly.Api/"]
-COPY ["JobHuntly.Application/JobHuntly.Application.csproj", "JobHuntly.Application/"]
-COPY ["JobHuntly.Domain/JobHuntly.Domain.csproj", "JobHuntly.Domain/"]
-COPY ["JobHuntly.Infrastructure/JobHuntly.Infrastructure.csproj", "JobHuntly.Infrastructure/"]
-RUN dotnet restore "JobHuntly.Api/JobHuntly.Api.csproj"
+# Restore as its own layer so dependencies are cached between builds.
+COPY JobHuntly.Api/JobHuntly.Api.csproj JobHuntly.Api/
+COPY JobHuntly.Application/JobHuntly.Application.csproj JobHuntly.Application/
+COPY JobHuntly.Domain/JobHuntly.Domain.csproj JobHuntly.Domain/
+COPY JobHuntly.Infrastructure/JobHuntly.Infrastructure.csproj JobHuntly.Infrastructure/
+RUN dotnet restore JobHuntly.Api/JobHuntly.Api.csproj
 
-# Copy everything else and build
-COPY . .
-WORKDIR "/src/JobHuntly.Api"
-RUN dotnet build "JobHuntly.Api.csproj" -c Release -o /app/build
+COPY JobHuntly.Api/ JobHuntly.Api/
+COPY JobHuntly.Application/ JobHuntly.Application/
+COPY JobHuntly.Domain/ JobHuntly.Domain/
+COPY JobHuntly.Infrastructure/ JobHuntly.Infrastructure/
+RUN dotnet publish JobHuntly.Api/JobHuntly.Api.csproj -c Release -o /app --no-restore
 
-FROM build AS publish
-RUN dotnet publish "JobHuntly.Api.csproj" -c Release -o /app/publish
-
-# Final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+# Small machines: skip the background GC thread and keep the heap modest.
+ENV ASPNETCORE_URLS=http://+:8080 \
+    DOTNET_gcConcurrent=false \
+    DOTNET_TieredPGO=0
+COPY --from=build /app .
+USER $APP_UID
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "JobHuntly.Api.dll"]

@@ -3,6 +3,7 @@ using System.Text.Json;
 using JobHuntly.Application.Exceptions;
 using JobHuntly.Application.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace JobHuntly.Infrastructure.Rates;
@@ -12,7 +13,7 @@ namespace JobHuntly.Infrastructure.Rates;
 /// includes GTQ. Their terms require attribution, which the API returns and the UI shows.
 /// The response is cached for 12 hours and validated before anything is returned.
 /// </summary>
-public class OpenErApiRateProvider(HttpClient http, IMemoryCache cache, ILogger<OpenErApiRateProvider> logger)
+public class OpenErApiRateProvider(HttpClient http, IMemoryCache cache, ILogger<OpenErApiRateProvider> logger, IConfiguration? configuration = null)
     : IExchangeRateProvider
 {
     public const string Endpoint = "https://open.er-api.com/v6/latest/USD";
@@ -29,7 +30,9 @@ public class OpenErApiRateProvider(HttpClient http, IMemoryCache cache, ILogger<
             using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
             timeout.CancelAfter(TimeSpan.FromSeconds(10));
 
-            using var response = await http.GetAsync(Endpoint, timeout.Token);
+            // Rates:Endpoint exists so end-to-end tests can point at a local mock instead of the real service.
+            var endpoint = configuration?["Rates:Endpoint"] is { Length: > 0 } custom ? custom : Endpoint;
+            using var response = await http.GetAsync(endpoint, timeout.Token);
             response.EnsureSuccessStatusCode();
             await using var stream = await response.Content.ReadAsStreamAsync(timeout.Token);
             using var document = await JsonDocument.ParseAsync(stream, cancellationToken: timeout.Token);
