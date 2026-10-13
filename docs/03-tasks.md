@@ -26,7 +26,7 @@ Legend: [ ] pending, [x] done.
 - [ ] **T13 Offers + comparator + stories API.** *Done when:* AC-7.1 to 7.3 pass; isolation tests for offers and stories.
 
 ## Phase 3. Design (can run in parallel with Phase 2)
-- [ ] **T14 Mockups, gate (b).** Static HTML mockups for landing, board, application detail, Today, analytics, offers at desktop and 375 px; shown to the owner. *Done when:* owner approves a direction.
+- [~] **T14 Mockups, gate (b), delivered, awaiting owner approval.** Static HTML mockups for landing, board, application detail, Today, analytics, offers at desktop and 375 px; shown to the owner. *Done when:* owner approves a direction.
 
 ## Phase 4. AI
 - [ ] **T15 AI plumbing.** `IAiClient`, `GroqAiClient`, `FakeAiClient`, quota table, timeout, error codes. *Done when:* AC-AI-1 to AC-AI-3 pass with the fake.

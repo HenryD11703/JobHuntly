@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JobHuntly (mockup: offers)</title><link rel="stylesheet" href="ledger.css"></head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">JobHuntly<i>.</i></a>
+  <nav class="nav" aria-label="Main">
+    <a href="board.html">Board</a>
+    <a href="today.html">Today<span class="count">3</span></a>
+    <a href="insights.html">Insights</a>
+    <a href="offers.html" aria-current="page">Offers</a>
+  </nav>
+  <span class="who">demo sandbox · expires in 23 h</span>
+  <a class="btn small" href="#">Log out</a>
+</div></header>
+
+<main class="wrap">
+  <div class="head">
+    <div><div class="eyebrow">3 offers</div><h1>Compare offers</h1></div>
+    <a class="btn primary" href="#">+ Add offer</a>
+  </div>
+
+  <section class="panel" aria-labelledby="fx"><h2 id="fx">Exchange rates you trust</h2>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:end">
+      <label><span class="mono muted">1 USD IN GTQ</span><br><input class="field mono" value="7.68" style="width:130px"></label>
+      <label><span class="mono muted">1 EUR IN GTQ</span><br><input class="field mono" value="8.40" style="width:130px"></label>
+      <p class="note" style="max-width:32em">You type the rates; nothing is fetched from the internet, so the numbers never change under you.</p>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="cmp"><h2 id="cmp">Side by side <span class="mono muted">monthly, gross</span></h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Company</th><th>As offered</th><th class="num">Per month, USD</th><th class="num">Per month, GTQ</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><b>Silverline</b><br><span class="muted">Senior Backend</span></td><td class="mono">USD 3,400 / month</td><td class="num"><b>3,400.00</b></td><td class="num"><b>26,112.00</b></td><td>Remote, contractor, 15 days paid vacation</td></tr>
+        <tr><td><b>Brightwave</b><br><span class="muted">Full-stack Engineer</span></td><td class="mono">EUR 38,400 / year</td><td class="num"><b>3,500.00</b></td><td class="num"><b>26,880.00</b></td><td>Employee, health insurance, equity unclear</td></tr>
+        <tr><td><b>Lumen Freight</b><br><span class="muted">.NET Developer</span></td><td class="mono">GTQ 24,000 / month</td><td class="num"><b>3,125.00</b></td><td class="num"><b>24,000.00</b></td><td>On-site zone 10, bonus in December</td></tr>
+      </tbody></table></div>
+    <p class="note" style="margin-top:10px">Gross figures as entered; no tax calculation. Annual amounts are divided by 12 and all results are rounded to 2 decimals.</p>
+  </section>
+</main>
+</body></html>

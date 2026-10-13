@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JobHuntly (mockup: insights)</title><link rel="stylesheet" href="ledger.css"></head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="index.html">JobHuntly<i>.</i></a>
+  <nav class="nav" aria-label="Main">
+    <a href="board.html">Board</a>
+    <a href="today.html">Today<span class="count">3</span></a>
+    <a href="insights.html" aria-current="page">Insights</a>
+    <a href="offers.html">Offers</a>
+  </nav>
+  <span class="who">demo sandbox · expires in 23 h</span>
+  <a class="btn small" href="#">Log out</a>
+</div></header>
+
+<main class="wrap">
+  <div class="head"><div><div class="eyebrow">Since 24 Aug · 14 applications</div><h1>Insights</h1></div></div>
+
+  <div class="stats">
+    <div class="stat"><b>14</b><span class="muted">applications</span></div>
+    <div class="stat"><b>42%</b><span class="muted">reached an interview (5 of 12 applied)</span></div>
+    <div class="stat"><b>1</b><span class="muted">offer</span></div>
+    <div class="stat"><b>6.5 d</b><span class="muted">average wait for a first reply</span></div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <section class="panel" aria-labelledby="f"><h2 id="f">Funnel</h2>
+        <div class="scroll"><table>
+          <thead><tr><th>Stage reached</th><th style="width:50%">Share of applications</th><th class="num">Count</th><th class="num">%</th></tr></thead>
+          <tbody>
+            <tr><td>Applied</td><td><div class="bar" style="width:100%"></div></td><td class="num">12</td><td class="num">100</td></tr>
+            <tr><td>Interviewing</td><td><div class="bar" style="width:42%"></div></td><td class="num">5</td><td class="num">42</td></tr>
+            <tr><td>Technical test</td><td><div class="bar" style="width:17%"></div></td><td class="num">2</td><td class="num">17</td></tr>
+            <tr><td>Offer</td><td><div class="bar alt" style="width:8%"></div></td><td class="num">1</td><td class="num">8</td></tr>
+          </tbody></table></div>
+        <p class="note" style="margin-top:8px">Computed from the timeline, so an application that ended in Rejected still counts for every stage it reached. 2 applications are still in Backlog and are not counted.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="s"><h2 id="s">Where replies come from</h2>
+        <div class="scroll"><table>
+          <thead><tr><th>Source</th><th class="num">Applications</th><th class="num">Replies</th><th class="num">Reply rate</th></tr></thead>
+          <tbody>
+            <tr><td>LinkedIn</td><td class="num">6</td><td class="num">2</td><td class="num">33%</td></tr>
+            <tr><td>Referral</td><td class="num">3</td><td class="num">2</td><td class="num"><span class="muted">not enough data</span></td></tr>
+            <tr><td>Company site</td><td class="num">3</td><td class="num">0</td><td class="num"><span class="muted">not enough data</span></td></tr>
+            <tr><td>Recruiter</td><td class="num">2</td><td class="num">1</td><td class="num"><span class="muted">not enough data</span></td></tr>
+          </tbody></table></div>
+        <p class="note" style="margin-top:8px">Percentages appear only with 5 or more applications in a group. Smaller groups would mislead you.</p>
+      </section>
+    </div>
+
+    <aside>
+      <section class="panel" aria-labelledby="t"><h2 id="t">Days in each stage</h2>
+        <div class="row"><span class="k">APPLIED</span><div class="mono">6.5 d avg</div></div>
+        <div class="row"><span class="k">INTERVIEWING</span><div class="mono">11 d avg</div></div>
+        <div class="row"><span class="k">TECH TEST</span><div class="mono">4 d avg</div></div>
+      </section>
+      <section class="panel" aria-labelledby="r"><h2 id="r">Rejection reasons</h2>
+        <div class="row"><span class="k">1</span><div>Skills gap</div></div>
+        <div class="row"><span class="k">1</span><div>No reason given</div></div>
+        <p class="note" style="margin-top:8px">Only 2 rejections so far, so no pattern to report yet.</p>
+      </section>
+    </aside>
+  </div>
+</main>
+</body></html>
