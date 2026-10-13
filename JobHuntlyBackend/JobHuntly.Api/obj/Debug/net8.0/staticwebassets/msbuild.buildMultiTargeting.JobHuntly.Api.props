@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/JobHuntly.Api.props" />
-</Project>

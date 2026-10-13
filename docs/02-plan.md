@@ -65,7 +65,7 @@ Estimated cost: Fly.io shared-cpu-1x about USD 2.19/month if it ran 24/7 (publis
 - **Design gate (b):** mockups of landing, board, application detail (timeline, prep, debrief), Today, analytics, offers are shown to the owner before UI implementation (task T14).
 
 ### D10. Testing and CI
-- Backend: xUnit. Unit tests for the calculators and services; integration tests with `WebApplicationFactory` against a real Postgres (service container in CI, `docker compose up db` locally; connection string from env).
+- Backend: xUnit. Unit tests for the calculators and services; integration tests with `WebApplicationFactory` against a real Postgres. The owner's machine has no Docker, so locally the tests and dev server use a **separate development database on Neon** (never the production one; connection string in a git-ignored `.env`); in CI a Postgres service container is used. Tests create their own unique users and clean up after themselves.
 - Frontend: Vitest for pure logic; Playwright E2E (desktop and 375 px) with axe, against the real backend and Postgres.
 - GitHub Actions: backend job (build, test, vulnerable-package check), frontend job (lint, tsc, unit, build, audit), E2E job (compose up, Playwright).
 - A traceability table "acceptance criterion → test" is generated at the end (task T30).

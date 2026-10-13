@@ -9,8 +9,8 @@ Legend: [ ] pending, [x] done.
 - [ ] **T02 Repo guide.** `CLAUDE.md` in the repo (commands, structure, rules) so a new chat can continue. *Done when:* a fresh reader can run the checks from it.
 
 ## Phase 1. Backend foundation
-- [ ] **T03 PostgreSQL.** Swap provider to Npgsql, delete old migrations, create one baseline, `docker-compose` with Postgres. Remove `Class1.cs`. *Done when:* app boots against Postgres and migrates.
-- [ ] **T04 Test harness.** xUnit project, `WebApplicationFactory`, real Postgres via env var, test helpers (register user A/B). *Done when:* one smoke test passes locally.
+- [ ] **T03 PostgreSQL.** Swap provider to Npgsql (accepting Neon's `postgresql://` URI form), delete old migrations, create one baseline, remove the SQL Server `docker-compose.yml`. Remove `Class1.cs`. Owner creates a free Neon account and a **development** database; the connection string goes in a git-ignored `.env`. *Done when:* app boots against the dev database and migrates.
+- [ ] **T04 Test harness.** xUnit project, `WebApplicationFactory`, real Postgres via env var (Neon dev DB locally, service container in CI), test helpers (register user A/B). *Done when:* one smoke test passes locally.
 - [ ] **T05 Auth hardening.** Cookie auth, spike through Vercel-style proxy, restricted CORS, rate limiting, password and email rules, `/health`. *Done when:* AC-9.2 to AC-9.5 pass.
 - [ ] **T06 Errors.** Typed exceptions plus problem-details middleware; controllers stop catching `Exception`. *Done when:* AC-9.6 passes; not-found is 404.
 - [ ] **T07 CI (backend).** GitHub Actions with Postgres service. *Done when:* green on a PR. Covers AC-NF-5 (backend half).
