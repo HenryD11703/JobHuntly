@@ -1,6 +1,7 @@
 using JobHuntly.Application.DTOs;
 using JobHuntly.Application.Interfaces;
 using JobHuntly.Domain.Entities;
+using JobHuntly.Application.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,7 @@ namespace JobHuntly.Application.Services
             var application = await _repository.GetByIdAsync(id, userId);
             if (application == null)
             {
-                throw new Exception("Application not found or access denied.");
+                throw new NotFoundException("Application not found.");
             }
 
             await _repository.DeleteAsync(application);
@@ -58,7 +59,7 @@ namespace JobHuntly.Application.Services
             var application = await _repository.GetByIdAsync(id, userId);
             if (application == null)
             {
-                throw new Exception("Application not found or access denied.");
+                throw new NotFoundException("Application not found.");
             }
 
             application.Status = dto.Status;
@@ -72,7 +73,7 @@ namespace JobHuntly.Application.Services
             var application = await _repository.GetByIdAsync(id, userId);
             if (application == null)
             {
-                throw new Exception("Application not found or access denied.");
+                throw new NotFoundException("Application not found.");
             }
 
             application.Notes = dto.Notes;
@@ -90,7 +91,7 @@ namespace JobHuntly.Application.Services
             var application = await _repository.GetByIdAsync(jobApplicationId, userId);
             if (application == null)
             {
-                throw new Exception("Application not found or access denied.");
+                throw new NotFoundException("Application not found.");
             }
 
             var interview = new Interview

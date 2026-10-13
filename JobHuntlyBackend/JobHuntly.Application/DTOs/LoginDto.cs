@@ -1,8 +1,12 @@
-namespace JobHuntly.Application.DTOs
+using System.ComponentModel.DataAnnotations;
+
+namespace JobHuntly.Application.DTOs;
+
+public class LoginDto
 {
-    public class LoginDto
-    {
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
+    [Required, EmailAddress, StringLength(150)]
+    public string Email { get; set; } = string.Empty;
+
+    [Required, StringLength(128)]
+    public string Password { get; set; } = string.Empty;
 }

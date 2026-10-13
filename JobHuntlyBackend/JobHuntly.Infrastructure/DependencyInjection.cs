@@ -9,9 +9,11 @@ namespace JobHuntly.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            var connection = PostgresConnectionString.Normalize(configuration.GetConnectionString("DefaultConnection"));
+
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection"),
+                options.UseNpgsql(
+                    connection,
                     b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
             services.AddScoped<JobHuntly.Application.Interfaces.IUserRepository, JobHuntly.Infrastructure.Repositories.UserRepository>();

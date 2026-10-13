@@ -1,6 +1,7 @@
 using JobHuntly.Application.DTOs;
 using JobHuntly.Application.Interfaces;
 using JobHuntly.Domain.Entities;
+using JobHuntly.Application.Exceptions;
 using System;
 using System.Threading.Tasks;
 
@@ -19,10 +20,10 @@ namespace JobHuntly.Application.Services
 
         public async Task<AuthResponseDto> LoginAsync(LoginDto request)
         {
-            var user = await _userRepository.GetUserByEmailAsync(request.Email);
+            var user = await _userRepository.GetUserByEmailAsync(NormalizeEmail(request.Email));
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
-                throw new Exception("Invalid credentials");
+                throw new UnauthorizedException();
             }
 
             var token = _jwtTokenGenerator.GenerateToken(user);
@@ -39,10 +40,11 @@ namespace JobHuntly.Application.Services
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto request)
         {
             // Verificamos si ya existe el usuario
-            var existingUser = await _userRepository.GetUserByEmailAsync(request.Email);
+            var email = NormalizeEmail(request.Email);
+            var existingUser = await _userRepository.GetUserByEmailAsync(email);
             if (existingUser != null)
             {
-                throw new Exception("Email already exists");
+                throw new ConflictException("An account with this email already exists.");
             }
 
             // Hashing the password
@@ -51,7 +53,7 @@ namespace JobHuntly.Application.Services
             var user = new User
             {
                 Id = Guid.NewGuid(),
-                Email = request.Email,
+                Email = email,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 PasswordHash = passwordHash
@@ -69,5 +71,6 @@ namespace JobHuntly.Application.Services
                 LastName = user.LastName
             };
         }
+        private static string NormalizeEmail(string email) => email.Trim().ToLowerInvariant();
     }
 }
