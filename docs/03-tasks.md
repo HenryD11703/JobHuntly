@@ -5,15 +5,17 @@ Status: **DRAFT, awaiting owner approval (gate a).** Order matters. Each task ha
 Legend: [ ] pending, [x] done.
 
 ## Phase 0. Hygiene
-- [ ] **T01 Repo hygiene.** Add root `.gitignore`; remove tracked `bin/`, `obj/` (230 files); add `.env.example`; move secrets out of `appsettings.json` and `docker-compose.yml`. *Done when:* `git ls-files` has no build output and a secret scan of tracked files finds nothing. Covers AC-9.7.
-- [ ] **T02 Repo guide.** `CLAUDE.md` in the repo (commands, structure, rules) so a new chat can continue. *Done when:* a fresh reader can run the checks from it.
+
+> Progress notes: T01-T07 done on branch `feat/revamp`. Verified: 24 tests (8 unit, 16 integration against a Neon dev branch) pass; `dotnet list package --vulnerable` clean. Not yet verified: the CI workflow has never run on GitHub (no push yet); cookie survival through a Vercel rewrite (T05 spike, needs the deployed frontend). T02 (repo CLAUDE.md) is still to be written.
+- [x] **T01 Repo hygiene.** Add root `.gitignore`; remove tracked `bin/`, `obj/` (230 files); add `.env.example`; move secrets out of `appsettings.json` and `docker-compose.yml`. *Done when:* `git ls-files` has no build output and a secret scan of tracked files finds nothing. Covers AC-9.7.
+- [x] **T02 Repo guide.** `CLAUDE.md` in the repo (commands, structure, rules) so a new chat can continue. *Done when:* a fresh reader can run the checks from it.
 
 ## Phase 1. Backend foundation
-- [ ] **T03 PostgreSQL.** Swap provider to Npgsql (accepting Neon's `postgresql://` URI form), delete old migrations, create one baseline, remove the SQL Server `docker-compose.yml`. Remove `Class1.cs`. Owner creates a free Neon account and a **development** database; the connection string goes in a git-ignored `.env`. *Done when:* app boots against the dev database and migrates.
-- [ ] **T04 Test harness.** xUnit project, `WebApplicationFactory`, real Postgres via env var (Neon dev DB locally, service container in CI), test helpers (register user A/B). *Done when:* one smoke test passes locally.
-- [ ] **T05 Auth hardening.** Cookie auth, spike through Vercel-style proxy, restricted CORS, rate limiting, password and email rules, `/health`. *Done when:* AC-9.2 to AC-9.5 pass.
-- [ ] **T06 Errors.** Typed exceptions plus problem-details middleware; controllers stop catching `Exception`. *Done when:* AC-9.6 passes; not-found is 404.
-- [ ] **T07 CI (backend).** GitHub Actions with Postgres service. *Done when:* green on a PR. Covers AC-NF-5 (backend half).
+- [x] **T03 PostgreSQL.** Swap provider to Npgsql (accepting Neon's `postgresql://` URI form), delete old migrations, create one baseline, remove the SQL Server `docker-compose.yml`. Remove `Class1.cs`. Owner creates a free Neon account and a **development** database; the connection string goes in a git-ignored `.env`. *Done when:* app boots against the dev database and migrates.
+- [x] **T04 Test harness.** xUnit project, `WebApplicationFactory`, real Postgres via env var (Neon dev DB locally, service container in CI), test helpers (register user A/B). *Done when:* one smoke test passes locally.
+- [x] **T05 Auth hardening.** Cookie auth, spike through Vercel-style proxy, restricted CORS, rate limiting, password and email rules, `/health`. *Done when:* AC-9.2 to AC-9.5 pass.
+- [x] **T06 Errors.** Typed exceptions plus problem-details middleware; controllers stop catching `Exception`. *Done when:* AC-9.6 passes; not-found is 404.
+- [x] **T07 CI (backend).** GitHub Actions with Postgres service. *Done when:* green on a PR. Covers AC-NF-5 (backend half).
 
 ## Phase 2. Domain
 - [ ] **T08 Model v2 + migration** (D4). *Done when:* migration applies; mapping tests pass.

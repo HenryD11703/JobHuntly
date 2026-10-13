@@ -1,0 +1,53 @@
+# CLAUDE.md: JobHuntly technical guide
+
+JobHuntly is an interview notebook for job seekers (Kanban pipeline + interview prep, debriefs, nudges, funnel analytics, offer comparison, optional AI help). Portfolio project of HenryD11703. Chat language with the owner: Spanish. Everything in this repo (code, UI, docs, commits): English.
+
+## Read first
+1. `docs/00-principles.md` (rules that are not broken), `docs/01-spec.md` (acceptance criteria), `docs/02-plan.md` (decisions and rejected alternatives), `docs/03-tasks.md` (ordered tasks with progress). Work task by task; tick them when the "done when" is true.
+2. Methodology: SDD without extra tooling. Spec and plan are approved by the owner before code; every acceptance criterion becomes a test. Owner gates: (a) docs, (b) design mockups (T14), (c) any push, PR, tag or deployment. Never push or deploy without asking.
+
+## Layout
+```
+JobHuntlyBackend/      ASP.NET Core 8, Clean Architecture
+  JobHuntly.Api            controllers, Program.cs, middleware (problem details, CSRF guard, .env loader)
+  JobHuntly.Application    DTOs, services, interfaces, typed exceptions (no EF, no HTTP)
+  JobHuntly.Domain         entities
+  JobHuntly.Infrastructure EF Core + Npgsql, repositories, JWT generator, migrations
+  JobHuntly.Tests          xUnit: Unit/ (no database) and Integration/ (real PostgreSQL)
+jobhuntly-frontend/    Next.js 16 + React 19 (being rebuilt, see tasks T20+)
+docs/                  principles, spec, plan, tasks
+```
+
+## Commands
+```bash
+# Backend (from JobHuntlyBackend/)
+dotnet build
+dotnet test                       # integration tests are skipped if no database is configured
+dotnet dotnet-ef migrations add <Name> -p JobHuntly.Infrastructure -s JobHuntly.Api -o Migrations   # local tool, restored by `dotnet tool restore`
+dotnet run --project JobHuntly.Api   # http://localhost:5070 (Swagger in Development)
+dotnet list package --vulnerable --include-transitive
+
+# Frontend (from jobhuntly-frontend/)
+npm ci && npm run lint && npx tsc --noEmit && npm audit --omit=dev
+```
+
+## Configuration and secrets
+- Copy `.env.example` to `.env` (repo root, git-ignored) and fill it in. The API loads it in local development without overriding real environment variables. Frontend: `jobhuntly-frontend/.env.example` -> `.env.local`.
+- Never print, log or commit values from `.env`. Use key names only when inspecting it.
+- `ConnectionStrings__DefaultConnection` accepts Neon's `postgresql://...` URI directly. Use a DEVELOPMENT database or branch, never production. Integration tests create users whose email starts with `itest-` and delete them afterwards.
+- `.env` may also contain `ConnectionStrings__DefaultConnection__Direct` (non-pooled string, kept as a fallback for migrations if the pooler ever gives trouble). The code does not read it today.
+- Production secrets live in Fly (`fly secrets set`) and Vercel env vars, never in the repo.
+
+## Conventions
+- Errors: throw `NotFoundException` / `ConflictException` / `UnauthorizedException` / `ValidationException` (Application layer); `ProblemDetailsExceptionHandler` maps them to 404/409/401/422. Other exceptions become a generic 500 with a trace id. Controllers do not catch exceptions.
+- Auth: JWT in the `jh_token` HttpOnly cookie. Non-GET requests under `/api` need the header `X-Requested-With: jobhuntly` (CSRF guard). The token is never in a response body.
+- Every query on user data is scoped by `UserId`; a missing or foreign resource is a 404, never 403. Every new user-data endpoint needs an isolation test in `Integration/IsolationTests.cs`.
+- Validation: DataAnnotations on DTOs; invalid models return 422 problem details.
+- Deterministic logic (nudges, funnel, offer comparison) lives in pure classes with a `TimeProvider`, unit-tested. AI only drafts; nothing AI-generated is saved without user confirmation; the app must work with AI off.
+- Integration tests share one xUnit collection (`Api`) and run serially because they set process environment variables.
+- Do not use `--global` git config or `-c user.name`; the commit identity is configured locally in this repo.
+
+## Environment notes (owner's machine)
+- Windows 11, Git Bash and PowerShell, .NET SDK 9 installed (projects target net8.0), Node 24, no Docker.
+- The owner's usual network blocks outbound TCP 5432 (found on 2026-10-13), so Neon is unreachable from it; a phone hotspot works. If integration tests hang or time out connecting, check the network first (`Test-NetConnection <host> -Port 5432`).
+- Neon free dev database may need a few seconds to wake on the first connection.
