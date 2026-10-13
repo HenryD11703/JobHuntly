@@ -23,7 +23,7 @@ Legend: [ ] pending, [x] done.
 - [ ] **T10 Interviews, checklists, debriefs API.** `ChecklistCatalog`. *Done when:* AC-3.1, 3.2, 4.1, 4.3, 4.4 and isolation tests pass.
 - [ ] **T11 Nudges.** `NudgeCalculator` + endpoint. *Done when:* AC-5.1, 5.3 unit tests incl. boundaries pass.
 - [ ] **T12 Funnel analytics v2.** *Done when:* AC-6.1 to 6.3 pass.
-- [ ] **T13 Offers + comparator + stories API.** *Done when:* AC-7.1 to 7.3 pass; isolation tests for offers and stories.
+- [ ] **T13 Offers + comparator + rate suggestion + stories API.** *Done when:* AC-7.1 to 7.3 and AC-7.5 pass (fake provider); isolation tests for offers and stories; one manual run against the real rates API recorded.
 
 ## Phase 3. Design (can run in parallel with Phase 2)
 - [~] **T14 Mockups, gate (b), delivered, awaiting owner approval.** Static HTML mockups for landing, board, application detail, Today, analytics, offers at desktop and 375 px; shown to the owner. *Done when:* owner approves a direction.

@@ -61,8 +61,14 @@ Estimated cost: Fly.io shared-cpu-1x about USD 2.19/month if it ran 24/7 (publis
 ### D9. Frontend
 - Stay on Next.js 16 / React 19, upgrade to a patched version (current one has a critical advisory). TypeScript strict, no `any`.
 - Keep vanilla CSS with design tokens (CSS variables) and CSS modules per component; the brutalist/Swiss identity is kept. Split the 446-line board page into components; typed API client in `src/lib/api.ts`.
+- Design direction: "Wayfinding" (see `docs/mockups/wayfinding.css`): Barlow Condensed / Barlow / IBM Plex Mono, black bars, concrete background, signal yellow `#FFD400` always with black text, green only for offers and red only for rejections, and every state also has a word (never colour alone). The first direction tried ("Ledger": warm paper plus orange) was dropped because it looked too much like current generic editorial templates.
 - Rejected: Tailwind or a component library (would pull toward the generic look the owner dislikes); a state library (server data plus local state is enough).
 - **Design gate (b):** mockups of landing, board, application detail (timeline, prep, debrief), Today, analytics, offers are shown to the owner before UI implementation (task T14).
+
+### D13. Exchange rates
+- `IExchangeRateProvider` (Application) with an `OpenErApiRateProvider` (Infrastructure) calling `https://open.er-api.com/v6/latest/USD`. Checked on 2026-10-13: it includes GTQ and EUR, needs no key and updates daily; its terms require attribution, which the UI shows. Cached 12 h in memory; response validated before use.
+- It only *suggests* values for the editable rate fields; saved rates drive every calculation (deterministic, principle 2).
+- Rejected: Frankfurter (ECB data, no GTQ); a community CDN dataset (works, but no terms or SLA); fetching on every page load (numbers would drift under the user).
 
 ### D10. Testing and CI
 - Backend: xUnit. Unit tests for the calculators and services; integration tests with `WebApplicationFactory` against a real Postgres. The owner's machine has no Docker, so locally the tests and dev server use a **separate development database on Neon** (never the production one; connection string in a git-ignored `.env`); in CI a Postgres service container is used. Tests create their own unique users and clean up after themselves.

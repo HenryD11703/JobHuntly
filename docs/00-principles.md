@@ -12,5 +12,5 @@ Rules that do not get broken. If a task conflicts with one of these, the task ch
 8. **Every acceptance criterion becomes a test.** If a criterion cannot be tested, it is rewritten until it can.
 9. **Real services, not only mocks.** Postgres is real in integration tests. The Groq integration is verified once against the real API before it is called done.
 10. **English everywhere in the repo** (UI, code, docs, commits). Spanish stays in the chat with the owner.
-11. **Distinct design, not generic.** Swiss/brutalist identity kept and sharpened: strong grid, real typography, no gradients, no purple, no rounded-card template look. Mockups are approved before UI work.
+11. **Distinct design, not generic.** Direction "Wayfinding": Swiss airport/station signage language (DIN-style Barlow type, black signage bars, concrete background, one signal yellow that always means "this needs you"; time comes first). No gradients, no purple, no rounded-card template look. Mockups are approved before UI work.
 12. **Small and understandable beats clever.** No dependency is added without a sentence in the plan explaining why.

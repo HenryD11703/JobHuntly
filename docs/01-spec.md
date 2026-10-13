@@ -29,7 +29,6 @@ People searching for a job (the owner is the first user, searching for remote wo
 - Email/calendar integrations, browser extension, notifications by email.
 - Salary tax/net calculations (no claims about taxes).
 - Teams or sharing, multi-language UI.
-- Live exchange-rate API (the rate is typed by the user; deterministic, no dependency).
 
 ## 3. User stories and acceptance criteria
 
@@ -70,9 +69,10 @@ Each criterion has an ID and the test type that proves it (U = unit, I = integra
 
 ### US7. Compare offers
 - **AC-7.1** (I) An offer stores: amount, currency (USD, GTQ, EUR), period (monthly/annual), and free-text notes (benefits, equity).
-- **AC-7.2** (U) The comparator normalises every offer to monthly GTQ and monthly USD using the exchange rates typed by the user; changing a rate updates the table instantly and never calls an external service.
+- **AC-7.2** (U) The comparator normalises every offer to monthly GTQ and monthly USD using the exchange rates saved in the user's settings; changing a rate updates the table instantly. The comparison itself never calls an external service, so numbers never change under the user.
 - **AC-7.3** (U) Rounding rules are fixed and tested (2 decimals, half away from zero); annual to monthly divides by 12.
 - **AC-7.4** (E) The UI states "gross figures as entered; no tax calculation".
+- **AC-7.5** (I) A "Fetch today's rate" button asks the backend for the current USD/GTQ and EUR/GTQ rates from a public rates API (open.er-api.com) and only fills the editable fields; nothing is saved until the user confirms. The backend caches the response for 12 hours, validates it (positive number, plausible range 1 to 20 for GTQ per USD), and shows the provider's attribution and update date. If the provider fails, the manual fields keep working and the UI says so. Tests use a fake provider; the real call is verified once manually (M).
 
 ### US8. Try it without signing up
 - **AC-8.1** (E) The landing page has a "Try the demo" button; one click lands on the board with at least 8 sample applications, 3 interviews (one with debrief) and 2 stories.
