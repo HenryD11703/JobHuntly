@@ -1,12 +1,14 @@
+using JobHuntly.Application.Demo;
 using JobHuntly.Application.DTOs;
 using JobHuntly.Application.Interfaces;
+using JobHuntly.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace JobHuntly.Api.Controllers;
 
-public class AuthController(IAuthService authService, IConfiguration configuration, IWebHostEnvironment env)
+public class AuthController(IAuthService authService, IDemoService demo, IConfiguration configuration, IWebHostEnvironment env)
     : ApiControllerBase
 {
     public const string CookieName = "jh_token";
@@ -29,6 +31,16 @@ public class AuthController(IAuthService authService, IConfiguration configurati
         return Ok(result);
     }
 
+    /// <summary>Creates a private sandbox with fictional data (deleted after 24 h) and signs the visitor into it.</summary>
+    [HttpPost("demo")]
+    [EnableRateLimiting("demo")]
+    public async Task<ActionResult<AuthResponseDto>> Demo()
+    {
+        var result = await demo.CreateSandboxAsync();
+        SetAuthCookie(result.Token, DemoSeed.Lifetime);
+        return Ok(result);
+    }
+
     [HttpPost("logout")]
     public IActionResult Logout()
     {
@@ -39,12 +51,12 @@ public class AuthController(IAuthService authService, IConfiguration configurati
     /// <summary>Lets the frontend ask "am I signed in?" without ever reading the token.</summary>
     [Authorize]
     [HttpGet("me")]
-    public IActionResult Me() => Ok(new { id = UserId });
+    public async Task<ActionResult<ProfileDto>> Me() => Ok(await authService.GetProfileAsync(UserId));
 
-    private void SetAuthCookie(string token)
+    private void SetAuthCookie(string token, TimeSpan? lifetime = null)
     {
         var minutes = configuration.GetValue("JwtSettings:ExpiryMinutes", 120);
-        Response.Cookies.Append(CookieName, token, CookieOptions(TimeSpan.FromMinutes(minutes)));
+        Response.Cookies.Append(CookieName, token, CookieOptions(lifetime ?? TimeSpan.FromMinutes(minutes)));
     }
 
     private CookieOptions CookieOptions(TimeSpan? maxAge) => new()

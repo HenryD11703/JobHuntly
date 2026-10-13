@@ -49,6 +49,13 @@ npm ci && npm run lint && npx tsc --noEmit && npm audit --omit=dev
 - Integration tests share one xUnit collection (`Api`) and run serially because they set process environment variables.
 - Do not use `--global` git config or `-c user.name`; the commit identity is configured locally in this repo.
 
+## Trying the API by hand
+```powershell
+cd JobHuntlyBackend
+dotnet run --project JobHuntly.Api        # http://localhost:5070, opens Swagger (needs the hotspot: Neon is on port 5432)
+```
+In Swagger: run `POST /api/auth/demo` (one click, a sandbox with 14 sample applications) or `POST /api/auth/register`, then try any endpoint; the session cookie is kept by the browser. Swagger adds the required `X-Requested-With` header automatically in Development. Useful first calls: `GET /api/today`, `GET /api/analytics/insights`, `GET /api/offers`, `GET /api/ai/status`.
+
 ## Environment notes (owner's machine)
 - Windows 11, Git Bash and PowerShell, .NET SDK 9 installed (projects target net8.0), Node 24, no Docker.
 - The owner's usual network blocks outbound TCP 5432 (found on 2026-10-13), so Neon is unreachable from it; a phone hotspot works. If integration tests hang or time out connecting, check the network first (`Test-NetConnection <host> -Port 5432`).

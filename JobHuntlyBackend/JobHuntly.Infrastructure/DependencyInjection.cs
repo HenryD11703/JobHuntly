@@ -2,6 +2,7 @@ using JobHuntly.Application.Ai;
 using JobHuntly.Application.Interfaces;
 using JobHuntly.Infrastructure.Ai;
 using JobHuntly.Infrastructure.Data;
+using JobHuntly.Infrastructure.Demo;
 using JobHuntly.Infrastructure.Rates;
 using JobHuntly.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,9 @@ public static class DependencyInjection
             client.Timeout = TimeSpan.FromSeconds(60); // the real limit is Groq:TimeoutSeconds, enforced per call
             client.DefaultRequestHeaders.UserAgent.ParseAdd("JobHuntly/1.0 (portfolio project)");
         });
+
+        services.AddScoped<DemoCleaner>();
+        services.AddHostedService<DemoCleanupService>();
 
         services.AddMemoryCache();
         services.AddHttpClient<IExchangeRateProvider, OpenErApiRateProvider>(client =>

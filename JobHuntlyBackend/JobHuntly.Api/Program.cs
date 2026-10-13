@@ -77,6 +77,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 // Rate limiting on credential endpoints.
 var authPerMinute = builder.Configuration.GetValue("RateLimit:AuthPerMinute", 10);
+var demoPerHour = builder.Configuration.GetValue("RateLimit:DemoPerHour", 10);
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -87,6 +88,15 @@ builder.Services.AddRateLimiter(options =>
             {
                 PermitLimit = authPerMinute,
                 Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+    options.AddPolicy("demo", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = demoPerHour,
+                Window = TimeSpan.FromHours(1),
                 QueueLimit = 0
             }));
     options.OnRejected = async (context, ct) =>
@@ -151,7 +161,11 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(ui =>
+    {
+        // Swagger UI cannot add custom headers by itself; our CSRF guard requires this one on writes.
+        ui.UseRequestInterceptor("(req) => { req.headers['X-Requested-With'] = 'jobhuntly'; return req; }");
+    });
 }
 
 app.UseCors("Frontend");

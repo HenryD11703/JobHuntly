@@ -37,6 +37,20 @@ namespace JobHuntly.Application.Services
             };
         }
 
+        public async Task<ProfileDto> GetProfileAsync(Guid userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId) ?? throw new NotFoundException("User not found.");
+            return new ProfileDto
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                IsDemo = user.IsDemo,
+                DemoExpiresAt = user.IsDemo ? user.CreatedAt + Demo.DemoSeed.Lifetime : null
+            };
+        }
+
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto request)
         {
             // Verificamos si ya existe el usuario

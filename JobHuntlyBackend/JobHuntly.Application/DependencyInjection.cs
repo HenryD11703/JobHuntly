@@ -18,6 +18,7 @@ public static class DependencyInjection
         services.AddScoped<IStoryService, StoryService>();
         services.AddScoped<ISettingsService, SettingsService>();
         services.AddScoped<IAiAssistantService, AiAssistantService>();
+        services.AddScoped<IDemoService, DemoService>();
         return services;
     }
 }

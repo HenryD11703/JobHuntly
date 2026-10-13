@@ -6,7 +6,7 @@ Legend: [ ] pending, [x] done.
 
 ## Phase 0. Hygiene
 
-> Progress notes: T01-T07, T08-T14 and T15-T18 done on branch `feat/revamp`; T14 approved (Wayfinding direction). Verified: 96 tests pass (unit + integration against a Neon dev branch; the real rates API was also called once by hand through `RUN_REAL_API_TESTS=1`: USD 7.6448 GTQ, EUR 8.5402 GTQ on 2026-10-13); `dotnet list package --vulnerable` clean. Not yet verified: the CI workflow has never run on GitHub (no push yet); cookie survival through a Vercel rewrite (T05 spike, needs the deployed frontend). T02 (repo CLAUDE.md) is still to be written.
+> Progress notes: T01-T07, T08-T14, T15-T18 and T19 done (backend feature-complete) on branch `feat/revamp`; T14 approved (Wayfinding direction). Verified: 164 tests pass (159 run, 5 skipped real-service tests) (unit + integration against a Neon dev branch; the real rates API was also called once by hand through `RUN_REAL_API_TESTS=1`: USD 7.6448 GTQ, EUR 8.5402 GTQ on 2026-10-13); `dotnet list package --vulnerable` clean. Not yet verified: the CI workflow has never run on GitHub (no push yet); cookie survival through a Vercel rewrite (T05 spike, needs the deployed frontend). T02 (repo CLAUDE.md) is still to be written.
 - [x] **T01 Repo hygiene.** Add root `.gitignore`; remove tracked `bin/`, `obj/` (230 files); add `.env.example`; move secrets out of `appsettings.json` and `docker-compose.yml`. *Done when:* `git ls-files` has no build output and a secret scan of tracked files finds nothing. Covers AC-9.7.
 - [x] **T02 Repo guide.** `CLAUDE.md` in the repo (commands, structure, rules) so a new chat can continue. *Done when:* a fresh reader can run the checks from it.
 
@@ -37,7 +37,7 @@ Legend: [ ] pending, [x] done.
 - [x] **T18 Real Groq verification.** Run each feature against the real API with the owner's key from env (never printed); confirm the model exists; record model name and a sample outcome. *Done when:* AC-AI-5 recorded. If the model is retired, change the env default.
 
 ## Phase 5. Demo
-- [ ] **T19 Demo sandbox.** Endpoint, fictional seed, cleanup service, lower quota, rate limit. *Done when:* AC-8.2 to 8.6 pass.
+- [x] **T19 Demo sandbox.** Endpoint, fictional seed, cleanup service, lower quota, rate limit. *Done when:* AC-8.2 to 8.6 pass.
 
 ## Phase 6. Frontend (after T14 approval)
 - [ ] **T20 Frontend foundation.** Upgrade Next to a patched version, fix the 3 lint errors, strict TypeScript, tokens, typed API client, auth through cookie. *Done when:* lint, tsc and audit are clean (AC-NF-6 frontend half).

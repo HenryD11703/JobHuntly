@@ -130,7 +130,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
             {
                 using var scope = Services.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                db.Users.Where(u => u.Email.StartsWith(TestDatabase.TestEmailPrefix)).ExecuteDelete();
+                db.Users.Where(u => u.Email.StartsWith(TestDatabase.TestEmailPrefix) || (u.IsDemo && u.Email.StartsWith("demo-"))).ExecuteDelete();
             }
             catch
             {

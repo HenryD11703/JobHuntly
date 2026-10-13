@@ -19,7 +19,7 @@ namespace JobHuntly.Infrastructure.Auth
             _configuration = configuration;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateToken(User user, TimeSpan? lifetime = null)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var secretKey = jwtSettings.GetValue<string>("Secret") ?? throw new Exception("JWT Secret key is missing.");
@@ -40,7 +40,7 @@ namespace JobHuntly.Infrastructure.Auth
                 issuer: jwtSettings.GetValue<string>("Issuer"),
                 audience: jwtSettings.GetValue<string>("Audience"),
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(jwtSettings.GetValue<int>("ExpiryMinutes")),
+                expires: DateTime.UtcNow.Add(lifetime ?? TimeSpan.FromMinutes(jwtSettings.GetValue("ExpiryMinutes", 120))),
                 signingCredentials: creds
             );
 
