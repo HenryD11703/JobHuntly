@@ -94,9 +94,17 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
     {
         if (disposing && TestDatabase.IsConfigured)
         {
-            using var scope = Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            db.Users.Where(u => u.Email.StartsWith(TestDatabase.TestEmailPrefix)).ExecuteDelete();
+            try
+            {
+                using var scope = Services.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Users.Where(u => u.Email.StartsWith(TestDatabase.TestEmailPrefix)).ExecuteDelete();
+            }
+            catch
+            {
+                // Cleanup is best effort: if the host never started (e.g. database unreachable),
+                // the original test failure is the useful error, not this one.
+            }
         }
         base.Dispose(disposing);
     }
