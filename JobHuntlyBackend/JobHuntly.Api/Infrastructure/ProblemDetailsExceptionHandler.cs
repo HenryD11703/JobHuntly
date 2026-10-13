@@ -21,6 +21,7 @@ public sealed class ProblemDetailsExceptionHandler(ILogger<ProblemDetailsExcepti
             ConflictException e => (StatusCodes.Status409Conflict, "Conflict", e.Message),
             UnauthorizedException e => (StatusCodes.Status401Unauthorized, "Unauthorized", e.Message),
             ValidationException e => (StatusCodes.Status422UnprocessableEntity, "Validation failed", e.Message),
+            ExternalServiceException e => (StatusCodes.Status503ServiceUnavailable, "Service unavailable", e.Message),
             _ => (StatusCodes.Status500InternalServerError, "Server error", "Something went wrong. Quote the trace id if you report it.")
         };
 

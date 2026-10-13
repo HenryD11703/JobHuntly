@@ -32,7 +32,7 @@ public class IsolationTests : IDisposable
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         var list = await client.GetFromJsonAsync<List<System.Text.Json.JsonElement>>("/api/jobapplications");
         Assert.Single(list!);
-        Assert.Equal(0, list![0].GetProperty("status").GetInt32()); // Backlog
+        Assert.Equal("Backlog", list![0].GetProperty("status").GetString());
     }
 
     [DatabaseFact]
@@ -54,7 +54,7 @@ public class IsolationTests : IDisposable
         var listB = await userB.GetFromJsonAsync<List<System.Text.Json.JsonElement>>("/api/jobapplications");
         Assert.Empty(listB!);
 
-        var status = await userB.PutAsJsonAsync($"/api/jobapplications/{id}/status", new { status = 4 });
+        var status = await userB.PutAsJsonAsync($"/api/jobapplications/{id}/status", new { status = "Offer" });
         var update = await userB.PutAsJsonAsync($"/api/jobapplications/{id}", new { notes = "hacked" });
         var interview = await userB.PostAsJsonAsync($"/api/jobapplications/{id}/interviews",
             new { interviewDate = DateTime.UtcNow.AddDays(1), roundType = "Technical" });
@@ -68,7 +68,7 @@ public class IsolationTests : IDisposable
         // And it is intact for its owner.
         var listA = await userA.GetFromJsonAsync<List<System.Text.Json.JsonElement>>("/api/jobapplications");
         Assert.Single(listA!);
-        Assert.Equal(0, listA![0].GetProperty("status").GetInt32());
+        Assert.Equal("Backlog", listA![0].GetProperty("status").GetString());
     }
 
     [DatabaseFact]

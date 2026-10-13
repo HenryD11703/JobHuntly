@@ -2,61 +2,38 @@ using JobHuntly.Application.Interfaces;
 using JobHuntly.Domain.Entities;
 using JobHuntly.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace JobHuntly.Infrastructure.Repositories
+namespace JobHuntly.Infrastructure.Repositories;
+
+public class JobApplicationRepository(AppDbContext context) : IJobApplicationRepository
 {
-    public class JobApplicationRepository : IJobApplicationRepository
+    private IQueryable<JobApplication> WithDetails() => context.JobApplications
+        .Include(j => j.Interviews).ThenInclude(i => i.Debrief)
+        .Include(j => j.Events)
+        .Include(j => j.Offers)
+        .AsSplitQuery();
+
+    public async Task<IEnumerable<JobApplication>> GetAllByUserIdAsync(Guid userId) =>
+        await WithDetails()
+            .Where(j => j.UserId == userId)
+            .OrderByDescending(j => j.AppliedDate)
+            .ToListAsync();
+
+    public async Task<JobApplication?> GetByIdAsync(Guid id, Guid userId) =>
+        await WithDetails().FirstOrDefaultAsync(j => j.Id == id && j.UserId == userId);
+
+    public async Task<JobApplication> AddAsync(JobApplication jobApplication)
     {
-        private readonly AppDbContext _context;
+        await context.JobApplications.AddAsync(jobApplication);
+        await context.SaveChangesAsync();
+        return jobApplication;
+    }
 
-        public JobApplicationRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+    public async Task SaveAsync() => await context.SaveChangesAsync();
 
-        public async Task<JobApplication> AddAsync(JobApplication jobApplication)
-        {
-            await _context.JobApplications.AddAsync(jobApplication);
-            await _context.SaveChangesAsync();
-            return jobApplication;
-        }
-
-        public async Task DeleteAsync(JobApplication jobApplication)
-        {
-            _context.JobApplications.Remove(jobApplication);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<IEnumerable<JobApplication>> GetAllByUserIdAsync(Guid userId)
-        {
-            return await _context.JobApplications
-                .Include(j => j.Interviews)
-                .Where(j => j.UserId == userId)
-                .OrderByDescending(j => j.AppliedDate)
-                .ToListAsync();
-        }
-
-        public async Task<JobApplication?> GetByIdAsync(Guid id, Guid userId)
-        {
-            return await _context.JobApplications
-                .Include(j => j.Interviews)
-                .FirstOrDefaultAsync(j => j.Id == id && j.UserId == userId);
-        }
-
-        public async Task UpdateAsync(JobApplication jobApplication)
-        {
-            _context.JobApplications.Update(jobApplication);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task AddInterviewAsync(Interview interview)
-        {
-            await _context.Interviews.AddAsync(interview);
-            await _context.SaveChangesAsync();
-        }
+    public async Task DeleteAsync(JobApplication jobApplication)
+    {
+        context.JobApplications.Remove(jobApplication);
+        await context.SaveChangesAsync();
     }
 }

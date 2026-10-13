@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using JobHuntly.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Time.Testing;
 
 namespace JobHuntly.Tests.Integration;
 
@@ -53,8 +56,31 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
         _environment = environment;
     }
 
-    protected override void ConfigureWebHost(IWebHostBuilder builder) =>
+    /// <summary>Controls "now" for the whole app, so time-based rules are tested deterministically.</summary>
+    public FakeTimeProvider Time { get; } = new(StartOfTest());
+
+    // Whole seconds only: PostgreSQL keeps microseconds, so sub-microsecond ticks would make
+    // exact-boundary assertions (such as "exactly 7 days") flaky.
+    private static DateTimeOffset StartOfTest()
+    {
+        var now = DateTimeOffset.UtcNow;
+        return now.AddTicks(-(now.Ticks % TimeSpan.TicksPerSecond));
+    }
+
+    /// <summary>Replace the exchange-rate provider (tests never call the real internet service).</summary>
+    public IExchangeRateProvider RateProvider { get; set; } = new FakeRateProvider();
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
         builder.UseEnvironment(_environment);
+        builder.ConfigureTestServices(services =>
+        {
+            services.RemoveAll<TimeProvider>();
+            services.AddSingleton<TimeProvider>(Time);
+            services.RemoveAll<IExchangeRateProvider>();
+            services.AddSingleton<IExchangeRateProvider>(_ => new DelegatingRateProvider(this));
+        });
+    }
 
     /// <summary>A client that behaves like our frontend: cookies on, CSRF header set.</summary>
     public HttpClient CreateBrowserClient(bool https = false)
@@ -115,4 +141,23 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
 public sealed class ApiCollection
 {
     public const string Name = "Api";
+}
+
+public sealed class FakeRateProvider : IExchangeRateProvider
+{
+    public Task<RateQuote> GetCurrentAsync(CancellationToken ct) =>
+        Task.FromResult(new RateQuote(7.6448m, 8.5400m, new DateTime(2026, 10, 12, 23, 57, 31, DateTimeKind.Utc),
+            "ExchangeRate-API", "https://www.exchangerate-api.com"));
+}
+
+public sealed class FailingRateProvider : IExchangeRateProvider
+{
+    public Task<RateQuote> GetCurrentAsync(CancellationToken ct) =>
+        throw new JobHuntly.Application.Exceptions.ExternalServiceException("Exchange rates are not available right now. Type the rates manually.");
+}
+
+/// <summary>Lets a test swap the provider after the host has been built.</summary>
+public sealed class DelegatingRateProvider(ApiFactory factory) : IExchangeRateProvider
+{
+    public Task<RateQuote> GetCurrentAsync(CancellationToken ct) => factory.RateProvider.GetCurrentAsync(ct);
 }

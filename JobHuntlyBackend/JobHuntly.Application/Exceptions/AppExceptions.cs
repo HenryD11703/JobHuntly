@@ -17,3 +17,6 @@ public sealed class UnauthorizedException(string message = "Invalid credentials.
 
 /// <summary>Input is well-formed but breaks a business rule.</summary>
 public sealed class ValidationException(string message) : AppException(message);
+
+/// <summary>A third-party service we depend on for an optional feature failed.</summary>
+public sealed class ExternalServiceException(string message) : AppException(message);

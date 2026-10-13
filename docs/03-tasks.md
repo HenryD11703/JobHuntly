@@ -6,7 +6,7 @@ Legend: [ ] pending, [x] done.
 
 ## Phase 0. Hygiene
 
-> Progress notes: T01-T07 done on branch `feat/revamp`. Verified: 24 tests (8 unit, 16 integration against a Neon dev branch) pass; `dotnet list package --vulnerable` clean. Not yet verified: the CI workflow has never run on GitHub (no push yet); cookie survival through a Vercel rewrite (T05 spike, needs the deployed frontend). T02 (repo CLAUDE.md) is still to be written.
+> Progress notes: T01-T07 and T08-T13 done on branch `feat/revamp`; T14 approved (Wayfinding direction). Verified: 96 tests pass (unit + integration against a Neon dev branch; the real rates API was also called once by hand through `RUN_REAL_API_TESTS=1`: USD 7.6448 GTQ, EUR 8.5402 GTQ on 2026-10-13); `dotnet list package --vulnerable` clean. Not yet verified: the CI workflow has never run on GitHub (no push yet); cookie survival through a Vercel rewrite (T05 spike, needs the deployed frontend). T02 (repo CLAUDE.md) is still to be written.
 - [x] **T01 Repo hygiene.** Add root `.gitignore`; remove tracked `bin/`, `obj/` (230 files); add `.env.example`; move secrets out of `appsettings.json` and `docker-compose.yml`. *Done when:* `git ls-files` has no build output and a secret scan of tracked files finds nothing. Covers AC-9.7.
 - [x] **T02 Repo guide.** `CLAUDE.md` in the repo (commands, structure, rules) so a new chat can continue. *Done when:* a fresh reader can run the checks from it.
 
@@ -18,15 +18,15 @@ Legend: [ ] pending, [x] done.
 - [x] **T07 CI (backend).** GitHub Actions with Postgres service. *Done when:* green on a PR. Covers AC-NF-5 (backend half).
 
 ## Phase 2. Domain
-- [ ] **T08 Model v2 + migration** (D4). *Done when:* migration applies; mapping tests pass.
-- [ ] **T09 Applications API v2.** Source, job post text, timeline events written automatically. *Done when:* AC-1.1, AC-1.2 and isolation tests (AC-9.1) pass for applications.
-- [ ] **T10 Interviews, checklists, debriefs API.** `ChecklistCatalog`. *Done when:* AC-3.1, 3.2, 4.1, 4.3, 4.4 and isolation tests pass.
-- [ ] **T11 Nudges.** `NudgeCalculator` + endpoint. *Done when:* AC-5.1, 5.3 unit tests incl. boundaries pass.
-- [ ] **T12 Funnel analytics v2.** *Done when:* AC-6.1 to 6.3 pass.
-- [ ] **T13 Offers + comparator + rate suggestion + stories API.** *Done when:* AC-7.1 to 7.3 and AC-7.5 pass (fake provider); isolation tests for offers and stories; one manual run against the real rates API recorded.
+- [x] **T08 Model v2 + migration** (D4). *Done when:* migration applies; mapping tests pass.
+- [x] **T09 Applications API v2.** Source, job post text, timeline events written automatically. *Done when:* AC-1.1, AC-1.2 and isolation tests (AC-9.1) pass for applications.
+- [x] **T10 Interviews, checklists, debriefs API.** `ChecklistCatalog`. *Done when:* AC-3.1, 3.2, 4.1, 4.3, 4.4 and isolation tests pass.
+- [x] **T11 Nudges.** `NudgeCalculator` + endpoint. *Done when:* AC-5.1, 5.3 unit tests incl. boundaries pass.
+- [x] **T12 Funnel analytics v2.** *Done when:* AC-6.1 to 6.3 pass.
+- [x] **T13 Offers + comparator + rate suggestion + stories API.** *Done when:* AC-7.1 to 7.3 and AC-7.5 pass (fake provider); isolation tests for offers and stories; one manual run against the real rates API recorded.
 
 ## Phase 3. Design (can run in parallel with Phase 2)
-- [~] **T14 Mockups, gate (b), delivered, awaiting owner approval.** Static HTML mockups for landing, board, application detail, Today, analytics, offers at desktop and 375 px; shown to the owner. *Done when:* owner approves a direction.
+- [x] **T14 Mockups, gate (b), approved by the owner (Wayfinding).** Static HTML mockups for landing, board, application detail, Today, analytics, offers at desktop and 375 px; shown to the owner. *Done when:* owner approves a direction.
 
 ## Phase 4. AI
 - [ ] **T15 AI plumbing.** `IAiClient`, `GroqAiClient`, `FakeAiClient`, quota table, timeout, error codes. *Done when:* AC-AI-1 to AC-AI-3 pass with the fake.

@@ -52,13 +52,13 @@ Each criterion has an ID and the test type that proves it (U = unit, I = integra
 - **AC-3.4** (U) Generated questions are stored with the interview so they are not regenerated (and not counted against quota) on every page view.
 
 ### US4. Debrief after an interview
-- **AC-4.1** (I) After an interview is marked Done the user can write free-text notes and a 1-5 self-rating.
+- **AC-4.1** (I) For an interview whose date has passed (or that is marked Done) the user can write free-text notes and a 1-5 self-rating. Saving a debrief marks the interview Done. A future or cancelled interview cannot have one (422).
 - **AC-4.2** (I) "Structure my notes" returns a draft with: questions asked, what went well, what went poorly, follow-up actions. The user edits and confirms before saving.
 - **AC-4.3** (U) Saved debriefs are stored as structured data (not just text), so analytics can use them later.
 - **AC-4.4** (I) A rejection reason is requested when moving to Rejected, but optional.
 
 ### US5. Never forget to follow up
-- **AC-5.1** (U) The "Today" view lists, computed by code only: (a) Applied with no activity for 7 days ("follow up"), (b) interview within 48 h with no preparation started ("prepare"), (c) interview date passed with no debrief ("write debrief"). The 7-day threshold is a constant covered by tests, including boundary cases (6 d 23 h vs 7 d).
+- **AC-5.1** (U) The "Today" view lists, computed by code only: (a) Applied with no activity for 7 days ("follow up"), (b) a scheduled interview within the next 48 h whose checklist is not complete ("prepare"), (c) interview date passed with no debrief ("write debrief"). The 7-day threshold is a constant covered by tests, including boundary cases (6 d 23 h vs 7 d).
 - **AC-5.2** (E) A nudge disappears once the action is done (e.g. logging a follow-up event or saving the debrief).
 - **AC-5.3** (U) Applications in Rejected or Offer never produce follow-up nudges.
 

@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using JobHuntly.Api.Controllers;
 using JobHuntly.Api.Infrastructure;
@@ -18,6 +19,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Enums travel as readable strings ("Interviewing", "Technical"), not numbers.
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    })
     .ConfigureApiBehaviorOptions(options =>
     {
         // Validation failures are 422 problem details, not 400.

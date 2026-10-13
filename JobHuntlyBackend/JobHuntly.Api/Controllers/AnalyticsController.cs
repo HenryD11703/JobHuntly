@@ -11,4 +11,8 @@ public class AnalyticsController(IAnalyticsService service) : ApiControllerBase
     [HttpGet("summary")]
     public async Task<ActionResult<AnalyticsSummaryDto>> GetSummary() =>
         Ok(await service.GetSummaryAsync(UserId));
+
+    [HttpGet("insights")]
+    public async Task<ActionResult<InsightsDto>> GetInsights() =>
+        Ok(await service.GetInsightsAsync(UserId));
 }

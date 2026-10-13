@@ -1,11 +1,9 @@
 using JobHuntly.Application.DTOs;
-using System;
-using System.Threading.Tasks;
 
-namespace JobHuntly.Application.Interfaces
+namespace JobHuntly.Application.Interfaces;
+
+public interface IAnalyticsService
 {
-    public interface IAnalyticsService
-    {
-        Task<AnalyticsSummaryDto> GetSummaryAsync(Guid userId);
-    }
+    Task<AnalyticsSummaryDto> GetSummaryAsync(Guid userId);
+    Task<InsightsDto> GetInsightsAsync(Guid userId);
 }
