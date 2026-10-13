@@ -23,6 +23,22 @@ namespace JobHuntly.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("JobHuntly.Domain.Entities.AiUsage", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("Day")
+                        .HasColumnType("date");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId", "Day");
+
+                    b.ToTable("AiUsage", (string)null);
+                });
+
             modelBuilder.Entity("JobHuntly.Domain.Entities.ApplicationEvent", b =>
                 {
                     b.Property<Guid>("Id")
@@ -295,6 +311,11 @@ namespace JobHuntly.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDemo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -315,6 +336,17 @@ namespace JobHuntly.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("JobHuntly.Domain.Entities.AiUsage", b =>
+                {
+                    b.HasOne("JobHuntly.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("JobHuntly.Domain.Entities.ApplicationEvent", b =>

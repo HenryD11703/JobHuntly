@@ -6,7 +6,7 @@ Legend: [ ] pending, [x] done.
 
 ## Phase 0. Hygiene
 
-> Progress notes: T01-T07 and T08-T13 done on branch `feat/revamp`; T14 approved (Wayfinding direction). Verified: 96 tests pass (unit + integration against a Neon dev branch; the real rates API was also called once by hand through `RUN_REAL_API_TESTS=1`: USD 7.6448 GTQ, EUR 8.5402 GTQ on 2026-10-13); `dotnet list package --vulnerable` clean. Not yet verified: the CI workflow has never run on GitHub (no push yet); cookie survival through a Vercel rewrite (T05 spike, needs the deployed frontend). T02 (repo CLAUDE.md) is still to be written.
+> Progress notes: T01-T07, T08-T14 and T15-T18 done on branch `feat/revamp`; T14 approved (Wayfinding direction). Verified: 96 tests pass (unit + integration against a Neon dev branch; the real rates API was also called once by hand through `RUN_REAL_API_TESTS=1`: USD 7.6448 GTQ, EUR 8.5402 GTQ on 2026-10-13); `dotnet list package --vulnerable` clean. Not yet verified: the CI workflow has never run on GitHub (no push yet); cookie survival through a Vercel rewrite (T05 spike, needs the deployed frontend). T02 (repo CLAUDE.md) is still to be written.
 - [x] **T01 Repo hygiene.** Add root `.gitignore`; remove tracked `bin/`, `obj/` (230 files); add `.env.example`; move secrets out of `appsettings.json` and `docker-compose.yml`. *Done when:* `git ls-files` has no build output and a secret scan of tracked files finds nothing. Covers AC-9.7.
 - [x] **T02 Repo guide.** `CLAUDE.md` in the repo (commands, structure, rules) so a new chat can continue. *Done when:* a fresh reader can run the checks from it.
 
@@ -29,10 +29,12 @@ Legend: [ ] pending, [x] done.
 - [x] **T14 Mockups, gate (b), approved by the owner (Wayfinding).** Static HTML mockups for landing, board, application detail, Today, analytics, offers at desktop and 375 px; shown to the owner. *Done when:* owner approves a direction.
 
 ## Phase 4. AI
-- [ ] **T15 AI plumbing.** `IAiClient`, `GroqAiClient`, `FakeAiClient`, quota table, timeout, error codes. *Done when:* AC-AI-1 to AC-AI-3 pass with the fake.
-- [ ] **T16 Extract job post.** Endpoint + validator + injection test. *Done when:* AC-1.3, 1.4, AC-AI-4 pass.
-- [ ] **T17 Interview prep + debrief structuring.** Endpoints, caching of generated questions. *Done when:* AC-3.3, 3.4, 4.2, 4.3 pass.
-- [ ] **T18 Real Groq verification.** Run each feature against the real API with the owner's key from env (never printed); confirm the model exists; record model name and a sample outcome. *Done when:* AC-AI-5 recorded. If the model is retired, change the env default.
+
+> T18 log (2026-10-13): model `openai/gpt-oss-120b`, all four real calls validated by the production parsers. Latency: extract 1.4 s, injection attempt 0.9 s (ignored: company came back as "Acme Corp", not "HACKED"), prep 3.0 s (6 questions, 1 linked to a story), debrief 1.1 s. Default timeout stays at 10 s. Run again with `RUN_REAL_API_TESTS=1` whenever the model or a prompt changes.
+- [x] **T15 AI plumbing.** `IAiClient`, `GroqAiClient`, `FakeAiClient`, quota table, timeout, error codes. *Done when:* AC-AI-1 to AC-AI-3 pass with the fake.
+- [x] **T16 Extract job post.** Endpoint + validator + injection test. *Done when:* AC-1.3, 1.4, AC-AI-4 pass.
+- [x] **T17 Interview prep + debrief structuring.** Endpoints, caching of generated questions. *Done when:* AC-3.3, 3.4, 4.2, 4.3 pass.
+- [x] **T18 Real Groq verification.** Run each feature against the real API with the owner's key from env (never printed); confirm the model exists; record model name and a sample outcome. *Done when:* AC-AI-5 recorded. If the model is retired, change the env default.
 
 ## Phase 5. Demo
 - [ ] **T19 Demo sandbox.** Endpoint, fictional seed, cleanup service, lower quota, rate limit. *Done when:* AC-8.2 to 8.6 pass.

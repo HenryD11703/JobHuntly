@@ -1,4 +1,6 @@
+using JobHuntly.Application.Ai;
 using JobHuntly.Application.Interfaces;
+using JobHuntly.Infrastructure.Ai;
 using JobHuntly.Infrastructure.Data;
 using JobHuntly.Infrastructure.Rates;
 using JobHuntly.Infrastructure.Repositories;
@@ -24,6 +26,13 @@ public static class DependencyInjection
         services.AddScoped<IOfferRepository, OfferRepository>();
         services.AddScoped<IStoryRepository, StoryRepository>();
         services.AddScoped<IJwtTokenGenerator, Auth.JwtTokenGenerator>();
+
+        services.AddScoped<IAiQuota, AiQuotaRepository>();
+        services.AddHttpClient<IAiClient, GroqAiClient>(client =>
+        {
+            client.Timeout = TimeSpan.FromSeconds(60); // the real limit is Groq:TimeoutSeconds, enforced per call
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("JobHuntly/1.0 (portfolio project)");
+        });
 
         services.AddMemoryCache();
         services.AddHttpClient<IExchangeRateProvider, OpenErApiRateProvider>(client =>

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using JobHuntly.Application.Ai;
 using JobHuntly.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -70,6 +71,9 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
     /// <summary>Replace the exchange-rate provider (tests never call the real internet service).</summary>
     public IExchangeRateProvider RateProvider { get; set; } = new FakeRateProvider();
 
+    /// <summary>Stands in for Groq. No automated test ever calls the real AI service.</summary>
+    public FakeAiClient Ai { get; } = new();
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment(_environment);
@@ -77,6 +81,8 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
         {
             services.RemoveAll<TimeProvider>();
             services.AddSingleton<TimeProvider>(Time);
+            services.RemoveAll<IAiClient>();
+            services.AddSingleton<IAiClient>(Ai);
             services.RemoveAll<IExchangeRateProvider>();
             services.AddSingleton<IExchangeRateProvider>(_ => new DelegatingRateProvider(this));
         });

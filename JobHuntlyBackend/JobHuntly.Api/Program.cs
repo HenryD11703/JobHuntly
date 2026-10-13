@@ -4,6 +4,7 @@ using System.Threading.RateLimiting;
 using JobHuntly.Api.Controllers;
 using JobHuntly.Api.Infrastructure;
 using JobHuntly.Application;
+using JobHuntly.Application.Ai;
 using JobHuntly.Infrastructure;
 using JobHuntly.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -45,6 +46,11 @@ builder.Services.AddProblemDetails();
 // Clean Architecture layers
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// Daily AI allowance per user (registered / demo sandbox). Optional: Ai__DailyLimit, Ai__DemoDailyLimit.
+builder.Services.AddSingleton(new AiLimits(
+    builder.Configuration.GetValue("Ai:DailyLimit", 30),
+    builder.Configuration.GetValue("Ai:DemoDailyLimit", 8)));
 
 // CORS: only the configured frontend origins. In production the browser talks to the frontend
 // origin and the /api/* rewrite forwards here, so this is mostly relevant for local tooling.

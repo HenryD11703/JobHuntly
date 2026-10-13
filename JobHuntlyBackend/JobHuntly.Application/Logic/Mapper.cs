@@ -38,7 +38,8 @@ public static class Mapper
                 .Select(c => new ChecklistItemDto { Id = c.Id, Text = c.Text, Done = done.Contains(c.Id) })
                 .ToList(),
             ChecklistComplete = ChecklistCatalog.IsComplete(i.RoundType, i.ChecklistDone),
-            Debrief = i.Debrief is null ? null : ToDto(i.Debrief)
+            Debrief = i.Debrief is null ? null : ToDto(i.Debrief),
+            PrepQuestions = Ai.AiAssistantService.ReadPrep(i.PrepQuestionsJson)
         };
     }
 

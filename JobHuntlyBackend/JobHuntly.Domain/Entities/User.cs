@@ -9,6 +9,9 @@ public class User
     public string LastName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    /// <summary>True for throwaway sandbox users created by the "Try the demo" button.</summary>
+    public bool IsDemo { get; set; }
+
     /// <summary>Exchange rates the user trusts, used by the offer comparator. Editable at any time.</summary>
     public decimal UsdToGtq { get; set; } = 7.64m;
     public decimal EurToGtq { get; set; } = 8.54m;

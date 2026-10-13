@@ -45,7 +45,7 @@ Estimated cost: Fly.io shared-cpu-1x about USD 2.19/month if it ran 24/7 (publis
 ### D6. AI integration
 - `IAiClient` in Application; `GroqAiClient` in Infrastructure using `HttpClient` against Groq's OpenAI-compatible chat completions endpoint. Config: `Groq__ApiKey`, `Groq__Model` (default `openai/gpt-oss-120b`, the model verified in the sibling project Rung; models get retired, so T18 re-verifies it).
 - Three use cases (`ExtractJobPost`, `GenerateInterviewPrep`, `StructureDebrief`), each: build prompt, call with JSON-only instruction and 10 s timeout, parse, validate against a C# schema with explicit limits, return a *draft*. Nothing persists without a separate confirm call.
-- One retry only when the output fails validation. Quota check happens before the call; cache hits skip it.
+- Output limits are trimmed rather than rejected when slightly exceeded (lists to their maximum, strings to their limit); wrong types, non-JSON and strings more than 4x the limit are rejected. One retry only when the output fails validation. Quota check happens before the call; cache hits skip it.
 - Job-post text is delimited and labelled as untrusted data in the prompt. This reduces, but does not eliminate, prompt injection; the real defence is that outputs are validated and never executed or saved automatically.
 - Tests use `FakeAiClient`. No test calls Groq. Real verification is the manual task T18.
 - Rejected: calling Groq from the browser (exposes the key); a vector DB or agent framework (over-engineering); AI deciding nudges or numbers (violates principle 2).

@@ -12,6 +12,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Debrief> Debriefs { get; set; } = null!;
     public DbSet<Story> Stories { get; set; } = null!;
     public DbSet<Offer> Offers { get; set; } = null!;
+    public DbSet<AiUsage> AiUsages { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,6 +34,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.Property(u => u.Email).IsRequired().HasMaxLength(150);
             b.Property(u => u.UsdToGtq).HasPrecision(10, 4).HasDefaultValue(7.64m);
             b.Property(u => u.EurToGtq).HasPrecision(10, 4).HasDefaultValue(8.54m);
+            b.Property(u => u.IsDemo).HasDefaultValue(false);
         });
 
         modelBuilder.Entity<JobApplication>(b =>
@@ -78,6 +80,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.Property(o => o.Currency).HasConversion<string>().HasMaxLength(3);
             b.Property(o => o.Period).HasConversion<string>().HasMaxLength(10);
             b.Property(o => o.Notes).HasMaxLength(2000);
+        });
+        modelBuilder.Entity<AiUsage>(b =>
+        {
+            b.ToTable("AiUsage");
+            b.HasKey(a => new { a.UserId, a.Day });
+            b.HasOne(a => a.User).WithMany().HasForeignKey(a => a.UserId).OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

@@ -1,3 +1,4 @@
+using JobHuntly.Application.Ai;
 using JobHuntly.Application.Interfaces;
 using JobHuntly.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ public static class DependencyInjection
         services.AddScoped<IOfferService, OfferService>();
         services.AddScoped<IStoryService, StoryService>();
         services.AddScoped<ISettingsService, SettingsService>();
+        services.AddScoped<IAiAssistantService, AiAssistantService>();
         return services;
     }
 }

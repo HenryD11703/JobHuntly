@@ -21,6 +21,9 @@ public class InterviewDto
     public List<ChecklistItemDto> Checklist { get; set; } = new();
     public bool ChecklistComplete { get; set; }
     public DebriefDto? Debrief { get; set; }
+
+    /// <summary>AI-suggested questions saved for this interview, or null if none were generated.</summary>
+    public PrepQuestionsDto? PrepQuestions { get; set; }
 }
 
 public class CreateInterviewDto

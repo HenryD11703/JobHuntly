@@ -38,7 +38,7 @@ Each criterion has an ID and the test type that proves it (U = unit, I = integra
 - **AC-1.1** (E) Creating an application needs only company and position; status defaults to Backlog; it appears on the board without reload.
 - **AC-1.2** (I) An application has an optional `Source` (LinkedIn, Referral, CompanySite, Recruiter, Other). Invalid values return 422.
 - **AC-1.3** (I) Pasting a job post and pressing "Extract" returns a *draft* (company, position, salary range, key requirements, location/remote flag). Nothing is saved until the user confirms. (AI faked in tests; see AC-AI-*.)
-- **AC-1.4** (U) Draft validation rejects model output that does not match the schema (missing fields, wrong types, over-long strings) and the UI falls back to the empty manual form.
+- **AC-1.4** (U) Draft validation rejects model output that does not match the schema (not JSON, wrong types, missing required keys, runaway-long strings) and the UI falls back to the empty manual form. Slightly over-long strings and lists are trimmed to the limit instead of rejected, because models often exceed limits a little. One automatic retry before giving up.
 
 ### US2. See my pipeline
 - **AC-2.1** (E) Dragging or using the keyboard menu moves a card between the six existing statuses; the change persists after reload.
