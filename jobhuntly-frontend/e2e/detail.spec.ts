@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+﻿import { expect, test, type Page } from "@playwright/test";
 import { card, expectAccessible, expectNoHorizontalScroll, startDemo } from "./helpers";
 
 async function open(page: Page, company: string) {
@@ -25,8 +25,11 @@ test.describe("application detail", () => {
     await startDemo(page);
     await open(page, "Northwind Labs");
 
+    // The tick shows at once (optimistic); wait for the server to confirm before reloading, as a real user would.
+    const confirmed = page.waitForResponse((r) => r.url().includes("/checklist") && r.request().method() === "PUT");
     await page.getByLabel("Prepare 2 questions to ask the interviewer").check(); // AC-3.2
     await expect(page.getByRole("heading", { name: /^Checklist/ })).toContainText("4 of 5");
+    await confirmed;
     await page.reload();
 
     await expect(page.getByRole("heading", { name: /^Checklist/ })).toContainText("4 of 5");

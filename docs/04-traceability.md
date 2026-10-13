@@ -1,4 +1,4 @@
-# Traceability: acceptance criterion to test
+﻿# Traceability: acceptance criterion to test
 
 Every criterion in `01-spec.md` and where it is proven. **Unit** and **Integration** are xUnit tests in `JobHuntlyBackend/JobHuntly.Tests` (integration runs against a real PostgreSQL); **E2E** are Playwright specs in `jobhuntly-frontend/e2e` (desktop and a 375 px phone viewport, real backend, local mocks for Groq and exchange rates); **Manual** means a person ran a check and the result is written here.
 
@@ -52,7 +52,7 @@ Status is honest: **Verified** (a test or recorded check passed), **Partial** (p
 | **AC-AI-5** each AI feature run once against the real Groq | Verified (Manual) | 2026-10-13, `openai/gpt-oss-120b`: extract 1.4 s, injection attempt 0.9 s, prep 3.0 s, debrief 1.1 s (see `03-tasks.md`) |
 | **AC-AI-6** third-party disclosure before first AI use | Verified | E2E "a pasted job post fills a draft after a one-time AI notice…", "the AI notice is only shown once"; landing footer |
 | **AC-NF-1** axe: no serious or critical violations, desktop and 375 px | Verified | E2E on landing, sign-in, board, detail, Today, Insights, Offers, Stories |
-| **AC-NF-2** Lighthouse performance 90+ on the landing page | Not verified | Not run yet |
+| **AC-NF-2** Lighthouse performance 90+ on the landing page | Verified (Manual) | 2026-10-13, desktop preset, production build served locally: performance 100, accessibility 100, best practices 100, SEO 100 (FCP 0.3 s, LCP 0.8 s, CLS 0, TBT 0 ms). Re-measure on the deployed URL: a local run says nothing about network latency |
 | **AC-NF-3** all UI strings in English | Partial | By construction and review; no automated check |
 | **AC-NF-4** cold start of the deployed backend measured | Not verified | Needs the Fly.io deployment |
 | **AC-NF-5** tests pass in CI | Not verified | Workflows written for backend, frontend and end to end; they have never run on GitHub because nothing was pushed |
