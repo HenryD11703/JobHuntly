@@ -160,3 +160,5 @@ td.num, th.num { text-align: right; font-family: var(--mono); font-variant-numer
   table { font-size: 14px; }
   .scroll { overflow-x: auto; }
 }
+
+td.num + td, th.num + th { padding-left: 28px; }
