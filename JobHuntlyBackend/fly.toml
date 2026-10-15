@@ -3,7 +3,7 @@
 # Then set the secrets (see docs/DEPLOYMENT.md) and run:  fly deploy
 #
 # app: Fly app names are global, so pick your own and change it here.
-app = "jobhuntly-api"
+app = "job-huntly"
 primary_region = "iad"   # Ashburn: close to Neon's us-east-2 (Ohio) and to Vercel's default region
 
 [build]
