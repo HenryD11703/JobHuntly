@@ -1,6 +1,6 @@
 # Deployment
 
-Three pieces, each on a free or near-free plan. Estimated cost: **about USD 2 a month**, only for the Fly.io machine (see "Cost"). Everything below was written before the first deploy: items marked *not yet verified* are confirmed on the first real deployment and then edited here.
+Three pieces, each on a free or near-free plan. Estimated cost: **about USD 2 a month**, only for the Fly.io machine (see "Cost"). First deployed on 2026-10-14 (Fly app `job-huntly`, region `iad`; frontend on Vercel). Numbers below were measured on that deployment.
 
 | Piece | Where | Needs |
 |---|---|---|
@@ -38,8 +38,9 @@ fly deploy
 ### Cost (honest numbers)
 
 - A `shared-cpu-1x` machine with 256 MB costs about **USD 2.19 a month if it ran 24/7** (Fly's published price). With `auto_stop_machines` it stops when idle and is billed only while running, so it should cost less. New Fly accounts have no free tier (only a short trial).
-- *Not yet verified:* that .NET 8 runs comfortably in 256 MB. If the first deploy shows memory errors, change `memory` in `fly.toml` to `512mb` (it costs more; check Fly's price list first).
-- *Not yet verified:* the cold start after the machine has stopped. The first request after a quiet period is slower while the machine wakes and Neon resumes. Measure it and write the number here.
+- *Measured 2026-10-14:* .NET 8 fits in 256 MB. After a cold start, a demo sandbox creation and a few requests, the API process peaked at about 155 MB resident (`VmHWM` of the dotnet process, read over `fly ssh console`). It is a single short session, not a load test, so keep an eye on it if traffic grows.
+- `fly launch` creates **two** machines by default (high availability). Run `fly scale count 1`: a second machine doubles the cost and a portfolio demo does not need it.
+- *Measured 2026-10-14:* cold start, with the machine stopped, through the Vercel domain, `POST /api/auth/demo` (creates a sandbox, so it touches Neon): **6.6, 6.8 and 7.4 s** in three runs, against **0.7 s** warm. The Neon branch was probably awake in those runs, so a first visit after a long quiet period can be slower.
 
 ## 3. Frontend (Vercel)
 
@@ -47,7 +48,7 @@ fly deploy
 2. Add one environment variable, for **Production** (and Preview if you use it): `BACKEND_URL` = `https://<app>.fly.dev` (no trailing slash).
 3. Deploy. The variable is read **at build time** (Next resolves rewrites during the build), so changing it needs a redeploy.
 
-The browser only ever talks to the Vercel domain. `/api/*` is forwarded to Fly on the server side, which keeps the auth cookie first-party. *Not yet verified on Vercel:* that `Set-Cookie` survives the rewrite there (it does with `next start` locally and in the end-to-end tests).
+The browser only ever talks to the Vercel domain. `/api/*` is forwarded to Fly on the server side, which keeps the auth cookie first-party. Verified on the deployed Vercel site on 2026-10-14: the demo button signs you in and the board loads, so the `Set-Cookie` survives the rewrite. API writes need the `X-Requested-With: jobhuntly` header (CSRF guard), so a bare `curl -X POST` gets a 403.
 
 ## Environment variables, in one place
 

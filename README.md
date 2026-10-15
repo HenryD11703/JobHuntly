@@ -2,7 +2,7 @@
 
 **An interview notebook for job seekers.** Most trackers store rows. JobHuntly shows what is next, helps you prepare each round, captures what happened right after, and tells you what your search is really saying.
 
-> **Live demo:** _added after the first deployment_ (one click, no signup: a private sandbox with fictional data, deleted after 24 hours).
+> **Live demo:** [job-huntly-smoky.vercel.app](https://job-huntly-smoky.vercel.app/) (one click, no signup: a private sandbox with fictional data, deleted after 24 hours). The first request after a quiet period takes about 7 seconds while the free-tier server wakes up.
 
 ![The pipeline: yellow cards are the ones that need you](docs/screenshots/board.png)
 

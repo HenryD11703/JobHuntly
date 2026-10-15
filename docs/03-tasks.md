@@ -49,7 +49,7 @@ Legend: [ ] pending, [x] done.
 - [x] **T26 Mobile + accessibility pass.** *Done when:* AC-NF-1 passes everywhere; screenshots reviewed at 375 px.
 
 ## Phase 7. Ship
-- [ ] **T27 Deployment files.** `fly.toml`, Dockerfile check, measure memory and cold start. *Done when:* numbers recorded (AC-NF-4); owner asked before any size above 256 MB.
+- [x] **T27 Deployment files.** `fly.toml`, Dockerfile check, measure memory and cold start. *Done when:* numbers recorded (AC-NF-4); owner asked before any size above 256 MB.
 - [x] **T28 CI complete.** Add frontend and E2E jobs. *Done when:* green; AC-NF-5.
 - [x] **T29 Docs.** English `README.md` (what, why, screenshots, real cost, setup, deployment, limits), `CONTRIBUTING.md`, `docs/ARCHITECTURE.md` (decisions and rejected alternatives). *Done when:* a stranger can run it from the README.
 - [ ] **T30 Traceability + final verification.** Table "criterion → test"; run everything; Lighthouse (AC-NF-2). *Done when:* every AC is green or explicitly listed as unverified.
